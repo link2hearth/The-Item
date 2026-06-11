@@ -1,0 +1,18 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:item": {
+    "description": {
+      "identifier": "fabmod:upgrade_anti_void",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:icon": "fabmod:upgrade_anti_void",
+      "minecraft:display_name": {
+        "value": "item.fabmod:upgrade_anti_void.name"
+      },
+      "minecraft:max_stack_size": 1
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "fabmod:recipe_crafting_table_perso"
+        },
+        "tags": ["crafting_table"],
+        "unlock": [
+            { "item": "minecraft:crafting_table" }
+        ],
+        "pattern": [
+            " C ",
+            "CUC",
+            " C "
+        ],
+        "key": {
+            "C": { "item": "minecraft:crafting_table" },
+            "U": { "item": "fabmod:upgrade_base" }
+        },
+        "result": {
+            "item": "fabmod:crafting_table_perso"
+        }
+    }
+}

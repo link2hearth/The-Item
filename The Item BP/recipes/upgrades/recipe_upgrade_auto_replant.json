@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_auto_replant" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:carrot" },
+      { "item": "minecraft:potato" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:wheat_seeds" },
+      { "item": "minecraft:carrot" },
+      { "item": "minecraft:pumpkin_seeds" },
+      { "item": "minecraft:wheat" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:potato" },
+      { "item": "minecraft:melon_seeds" },
+      { "item": "minecraft:beetroot_seeds" },
+      { "item": "minecraft:beetroot" }
+    ],
+    "result": { "item": "fabmod:upgrade_auto_replant" }
+  }
+}

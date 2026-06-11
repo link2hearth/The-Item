@@ -1,0 +1,22 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_smite" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:skull", "data": 1 }
+    ],
+    "ingredients": [
+      { "item": "minecraft:rotten_flesh" },
+      { "item": "minecraft:skull", "data": 1 },
+      { "item": "minecraft:rotten_flesh" },
+      { "item": "minecraft:soul_sand" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:soul_sand" },
+      { "item": "minecraft:bone" },
+      { "item": "minecraft:potion", "data": 32 },
+      { "item": "minecraft:bone" }
+    ],
+    "result": { "item": "fabmod:upgrade_smite" }
+  }
+}

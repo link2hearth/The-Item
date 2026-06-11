@@ -1,0 +1,24 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_backpack_t3" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:netherrack" },
+      { "item": "minecraft:quartz" },
+      { "item": "minecraft:lava_bucket" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:netherrack" },
+      { "item": "minecraft:quartz" },
+      { "item": "minecraft:lava_bucket" },
+      { "item": "minecraft:chest" },
+      { "item": "fabmod:upgrade_base" },
+	  { "item": "minecraft:chest" },
+	  { "item": "minecraft:netherrack" },
+      { "item": "minecraft:quartz" },
+      { "item": "minecraft:lava_bucket" }
+    ],
+    "result": { "item": "fabmod:upgrade_backpack_t3" }
+  }
+}

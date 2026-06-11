@@ -1,0 +1,22 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_item_name" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:name_tag" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:book" },
+      { "item": "minecraft:paper" },
+      { "item": "minecraft:book" },
+      { "item": "minecraft:spyglass" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:spyglass" },
+      { "item": "minecraft:book" },
+      { "item": "minecraft:name_tag" },
+      { "item": "minecraft:book" }
+    ],
+    "result": { "item": "fabmod:upgrade_item_name" }
+  }
+}

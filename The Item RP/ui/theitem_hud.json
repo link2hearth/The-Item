@@ -1,0 +1,374 @@
+{
+    // The Item — indicateur de cadavre
+    // Panneau HUD personnalisé : icône + flèche (ligne 1) / distance (ligne 2)
+    // Positionnable via la préférence joueur p_corpse_indicator_pos (tl/tc/tr/bl/bc/br)
+
+    "namespace": "theitem_hud",
+
+    // Conteneur racine — taille 100% pour couvrir tout l'écran
+    // Regroupe les panels indicateur de cadavre (_ti:) et WAILA (_tw:)
+    "indicator": {
+        "type": "panel",
+        "size": ["100%", "100%"],
+        "controls": [
+            { "tl@theitem_hud.panel_tl": {} },
+            { "tc@theitem_hud.panel_tc": {} },
+            { "tr@theitem_hud.panel_tr": {} },
+            { "bl@theitem_hud.panel_bl": {} },
+            { "bc@theitem_hud.panel_bc": {} },
+            { "br@theitem_hud.panel_br": {} },
+            { "tw_tl@theitem_hud.panel_tw_tl": {} },
+            { "tw_tc@theitem_hud.panel_tw_tc": {} },
+            { "tw_tr@theitem_hud.panel_tw_tr": {} },
+            { "tw_bl@theitem_hud.panel_tw_bl": {} },
+            { "tw_br@theitem_hud.panel_tw_br": {} }
+        ]
+    },
+
+    // ── Éléments communs ────────────────────────────────────────────────────
+
+    "bg": {
+        "type": "image",
+        "texture": "textures/ui/White",
+        "color": [0.20, 0.20, 0.20],
+        "alpha": 0.65,
+        "nineslice_size": 2,
+        "size": ["100% + 10px", "100% + 8px"],
+        "anchor_from": "center",
+        "anchor_to": "center"
+    },
+
+    // Background pour panels WAILA (taille auto-calculée sur le contenu)
+    "bg_tw": {
+        "type": "image",
+        "texture": "textures/ui/White",
+        "color": [0.20, 0.20, 0.20],
+        "alpha": 0.65,
+        "nineslice_size": 2,
+        "size": ["100%", "100%"],
+        "anchor_from": "center",
+        "anchor_to": "center"
+    },
+
+    // Label pour panels corpse (taille fixe → content sans size explicite fonctionne)
+    "content": {
+        "type": "label",
+        "font_type": "smooth",
+        "shadow": true,
+        "localize": false,
+        "enable_profanity_filter": false,
+        "anchor_from": "center",
+        "anchor_to": "center",
+        "text": "#text",
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_subtitle_text_string",
+                "binding_name_override": "#text"
+            }
+        ]
+    },
+
+    // Label pour panels WAILA (taille 100%x100% + centrage texte pour panel à largeur fixe)
+    "content_tw": {
+        "type": "label",
+        "font_type": "smooth",
+        "shadow": true,
+        "localize": false,
+        "enable_profanity_filter": false,
+        "text_alignment": "center",
+        "anchor_from": "center",
+        "anchor_to": "center",
+        "size": ["100%", "100%"],
+        "text": "#text",
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_subtitle_text_string",
+                "binding_name_override": "#text"
+            }
+        ]
+    },
+
+    // ── 6 panels de position ────────────────────────────────────────────────
+    // Chaque panel est visible uniquement quand le titre contient le code correspondant.
+    // Format titre : _ti:{code}  (ex: _ti:tl = top_left)
+
+    "panel_tl": {
+        "type": "panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [6, 6],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:tl')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    "panel_tc": {
+        "type": "panel",
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "offset": [0, 6],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:tc')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    "panel_tr": {
+        "type": "panel",
+        "anchor_from": "top_right",
+        "anchor_to": "top_right",
+        "offset": [-6, 6],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:tr')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    "panel_bl": {
+        "type": "panel",
+        "anchor_from": "bottom_left",
+        "anchor_to": "bottom_left",
+        "offset": [6, -30],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:bl')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    "panel_bc": {
+        "type": "panel",
+        "anchor_from": "bottom_middle",
+        "anchor_to": "bottom_middle",
+        "offset": [0, -30],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:bc')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    "panel_br": {
+        "type": "panel",
+        "anchor_from": "bottom_right",
+        "anchor_to": "bottom_right",
+        "offset": [-6, -30],
+        "size": [32, 22],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#ti_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #ti_t = '_ti:br')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content": {} },
+            { "bg@theitem_hud.bg": {} }
+        ]
+    },
+
+    // ── Panels WAILA (_tw:) — une ligne, auto-size ───────────────────────────
+    // bc (bas centre) utilise setActionBar directement, pas de panel JSON UI.
+
+    "panel_tw_tl": {
+        "type": "panel",
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "offset": [6, 6],
+        "size": [160, 11],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#tw_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #tw_t = '_tw:tl')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content_tw": {} },
+            { "bg@theitem_hud.bg_tw": {} }
+        ]
+    },
+
+    "panel_tw_tc": {
+        "type": "panel",
+        "anchor_from": "top_middle",
+        "anchor_to": "top_middle",
+        "offset": [0, 6],
+        "size": [160, 11],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#tw_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #tw_t = '_tw:tc')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content_tw": {} },
+            { "bg@theitem_hud.bg_tw": {} }
+        ]
+    },
+
+    "panel_tw_tr": {
+        "type": "panel",
+        "anchor_from": "top_right",
+        "anchor_to": "top_right",
+        "offset": [-6, 6],
+        "size": [160, 11],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#tw_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #tw_t = '_tw:tr')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content_tw": {} },
+            { "bg@theitem_hud.bg_tw": {} }
+        ]
+    },
+
+    "panel_tw_bl": {
+        "type": "panel",
+        "anchor_from": "bottom_left",
+        "anchor_to": "bottom_left",
+        "offset": [6, -30],
+        "size": [160, 11],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#tw_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #tw_t = '_tw:bl')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content_tw": {} },
+            { "bg@theitem_hud.bg_tw": {} }
+        ]
+    },
+
+    "panel_tw_br": {
+        "type": "panel",
+        "anchor_from": "bottom_right",
+        "anchor_to": "bottom_right",
+        "offset": [-6, -30],
+        "size": [160, 11],
+        "visible": false,
+        "bindings": [
+            {
+                "binding_type": "global",
+                "binding_name": "#hud_title_text_string",
+                "binding_name_override": "#tw_t"
+            },
+            {
+                "binding_type": "view",
+                "source_property_name": "('%.6s' * #tw_t = '_tw:br')",
+                "target_property_name": "#visible"
+            }
+        ],
+        "controls": [
+            { "text@theitem_hud.content_tw": {} },
+            { "bg@theitem_hud.bg_tw": {} }
+        ]
+    }
+}

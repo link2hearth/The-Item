@@ -1,0 +1,23 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6The §cItem §9RP",
+		"description": "Ressources pour The Item",
+		"min_engine_version": [1, 21, 120],
+		"uuid": "d57bea06-8a5f-4c4a-b396-17325943225f",
+		"version": [1, 0, 0]
+	},
+	"modules": [
+		{
+			"type": "resources",
+			"uuid": "943d14a9-319f-4c6c-8053-214ecc704726",
+			"version": [1, 0, 0]
+		}
+	],
+	"dependencies": [
+		{
+			"uuid": "91acab2d-a92a-4286-9817-54fdd8e3d713",
+			"version": [1, 0, 0]
+		}
+	]
+}

@@ -1,0 +1,24 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_damage_t1" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:wooden_sword" },
+	  { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:wooden_pickaxe" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:wooden_sword" },
+      { "item": "minecraft:wooden_pickaxe" },
+      { "item": "minecraft:wooden_axe" },
+      { "tag": "minecraft:logs" },
+      { "item": "fabmod:upgrade_base" },
+	  { "tag": "minecraft:logs" },
+      { "item": "minecraft:stone_sword" },
+	  { "item": "minecraft:stone_pickaxe" },
+      { "item": "minecraft:stone_axe" }
+    ],
+    "result": { "item": "fabmod:upgrade_damage_t1" }
+  }
+}

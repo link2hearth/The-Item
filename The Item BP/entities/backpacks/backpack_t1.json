@@ -1,0 +1,80 @@
+{
+	"format_version": "1.20.30",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "fabmod:backpack_t1",
+			"is_spawnable": false,
+			"is_summonable": true,
+			"is_experimental": false
+		},
+		"component_groups": {
+			"despawn": {
+				"minecraft:instant_despawn": {
+					"remove_child_entities": false
+				}
+			}
+		},
+		"events": {
+			"despawn_backpack": {
+				"add": {
+					"component_groups": ["despawn"]
+				}
+			}
+		},
+		"components": {
+			"minecraft:physics": {
+				"has_gravity": false,
+				"has_collision": false
+			},
+			"minecraft:type_family": {
+				"family": ["backpack"]
+			},
+			"minecraft:persistent": {},
+			"minecraft:pushable": {
+				"is_pushable": false
+			},
+			"minecraft:breathable": {
+				"breathes_air": true,
+				"breathes_water": true,
+				"breathes_lava": true,
+				"breathes_solids": true
+			},
+			"minecraft:nameable": {
+				"allow_name_tag_renaming": false,
+				"always_show": false
+			},
+			"minecraft:inventory": {
+				"additional_slots_per_strength": 0,
+				"can_be_siphoned_from": false,
+				"container_type": "minecart_chest",
+				"inventory_size": 99,
+				"private": false,
+				"restrict_to_owner": false
+			},
+			"minecraft:custom_hit_test": {
+				"hitboxes": [
+					{
+						"width": 0.35,
+						"height": 150,
+						"pivot": [0, 1.5, 0]
+					}
+				]
+			},
+			"minecraft:damage_sensor": {
+				"triggers": [
+					{
+						"cause": "all",
+						"deals_damage": false
+					}
+				]
+			},
+			"minecraft:collision_box": {
+				"width": 0.001,
+				"height": 0.001
+			},
+			"minecraft:push_through": {
+				"value": 1
+			}
+		}
+	}
+}

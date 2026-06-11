@@ -1,0 +1,15 @@
+{
+	"format_version": "1.10.0",
+	"minecraft:client_entity": {
+		"description": {
+			"identifier": "fabmod:backpack_hover",
+			"materials": { "default": "entity_alphatest" },
+			"textures":  { "default": "textures/entity/bat" },
+			"geometry":  { "default": "geometry.bat" },
+			"render_controllers": ["controller.render.default"],
+			"scripts": {
+				"scale": "0.001"
+			}
+		}
+	}
+}

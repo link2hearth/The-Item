@@ -1,0 +1,22 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_haste" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:beacon" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:stone_pickaxe" },
+      { "item": "minecraft:emerald" },
+      { "item": "minecraft:iron_pickaxe" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:beacon" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:diamond_pickaxe" },
+      { "item": "minecraft:diamond" },
+      { "item": "minecraft:netherite_pickaxe" }
+    ],
+    "result": { "item": "fabmod:upgrade_haste" }
+  }
+}

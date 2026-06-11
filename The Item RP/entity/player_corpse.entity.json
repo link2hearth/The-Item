@@ -1,0 +1,27 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "fabmod:player_corpse",
+            "materials": {
+                "default": "skeleton"
+            },
+            "textures": {
+                "default": "textures/entity/skeleton/skeleton"
+            },
+            "geometry": {
+                "default": "geometry.player_corpse"
+            },
+            "scripts": {
+                "should_update_bones_and_effects_offscreen": true
+            },
+            "render_controllers": ["controller.render.player_corpse"],
+            "enable_attachables": true,
+            "hide_armor": false,
+            "spawn_egg": {
+                "base_color": "#ffffff",
+                "overlay_color": "#9a9a9a"
+            }
+        }
+    }
+}

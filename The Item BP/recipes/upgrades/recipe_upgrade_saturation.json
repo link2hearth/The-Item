@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_saturation" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:golden_carrot" },
+      { "item": "minecraft:enchanted_golden_apple" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:golden_apple" },
+      { "item": "minecraft:cooked_beef" },
+      { "item": "minecraft:golden_carrot" },
+      { "item": "minecraft:enchanted_golden_apple" },
+	  { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:bread" },
+      { "item": "minecraft:cooked_beef" },
+      { "item": "minecraft:honey_bottle" },
+      { "item": "minecraft:cake" }
+    ],
+    "result": { "item": "fabmod:upgrade_saturation" }
+  }
+}

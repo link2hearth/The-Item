@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_lifesteal" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:golden_apple" },
+      { "item": "minecraft:ghast_tear" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:golden_carrot" },
+      { "item": "minecraft:ghast_tear" },
+      { "item": "minecraft:golden_carrot" },
+      { "item": "minecraft:fermented_spider_eye" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:fermented_spider_eye" },
+      { "item": "minecraft:golden_apple" },
+      { "item": "minecraft:ghast_tear" },
+      { "item": "minecraft:golden_apple" }
+    ],
+    "result": { "item": "fabmod:upgrade_lifesteal" }
+  }
+}

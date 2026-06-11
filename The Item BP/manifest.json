@@ -1,0 +1,42 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "§6The §cItem §fBP",
+		"description": "All in one Item",
+		"min_engine_version": [1, 21, 120],
+		"uuid": "91acab2d-a92a-4286-9817-54fdd8e3d713",
+		"version": [1, 0, 0]
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "8b2dbc7a-76b7-4105-ab03-a6770845b548",
+			"version": [1, 0, 0]
+		},
+		{
+			"type": "script",
+			"language": "javascript",
+			"uuid": "32f29d1e-9b02-4e1e-8245-0738079a6ddd",
+			"entry": "scripts/main.js",
+			"version": [1, 0, 0]
+		}
+	],
+	    "metadata": {
+        "authors": ["Claude-Fabien"],
+        "product_type": "addon"
+    },
+	"dependencies": [
+		{
+			"uuid": "d57bea06-8a5f-4c4a-b396-17325943225f",
+			"version": [1, 0, 0]
+		},
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.6.0"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.0.0"
+		}
+	]
+}

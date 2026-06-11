@@ -1,0 +1,22 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_sweeping" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:tnt" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:iron_sword" },
+      { "item": "minecraft:tnt" },
+      { "item": "minecraft:diamond_sword" },
+      { "item": "minecraft:tnt" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:tnt" },
+      { "item": "minecraft:diamond_sword" },
+      { "item": "minecraft:tnt" },
+      { "item": "minecraft:iron_sword" }
+    ],
+    "result": { "item": "fabmod:upgrade_sweeping" }
+  }
+}

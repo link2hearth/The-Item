@@ -1,0 +1,50 @@
+{
+    "format_version": "1.20.30",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "fabmod:fireball_shot",
+            "is_spawnable": false,
+            "is_summonable": true,
+            "is_experimental": false
+        },
+        "components": {
+            "minecraft:projectile": {
+                "gravity": 0.008,
+                "liquid_inertia": 0.6,
+                "stop_on_hurt": false,
+                "power": 1.5
+            },
+            "minecraft:collision_box": {
+                "width": 0.25,
+                "height": 0.25
+            },
+            "minecraft:damage_sensor": {
+                "triggers": [{ "cause": "all", "deals_damage": false }]
+            },
+            "minecraft:pushable": {
+                "is_pushable": false,
+                "is_pushable_by_piston": false
+            },
+            "minecraft:timer": {
+                "time": 10,
+                "looping": false,
+                "time_down_event": {
+                    "event": "despawn",
+                    "target": "self"
+                }
+            }
+        },
+        "component_groups": {
+            "despawn": {
+                "minecraft:instant_despawn": {}
+            }
+        },
+        "events": {
+            "despawn": {
+                "add": {
+                    "component_groups": ["despawn"]
+                }
+            }
+        }
+    }
+}

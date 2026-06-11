@@ -1,0 +1,569 @@
+{
+    "namespace": "chest",
+
+    "chest_label": {
+        "$new_container_title|default": "$container_title",
+        "text": "$new_container_title"
+    },
+
+    "trash_grid_item@common.container_item": {
+        "$item_collection_name": "container_items"
+    },
+
+    "trash_t1_panel": {
+        "type": "panel",
+        "size": [26, 28],
+        "anchor_from": "top_right",
+        "anchor_to": "top_left",
+        "layer": 15,
+        "controls": [
+            {
+                "tab_bg": {
+                    "type": "image",
+                    "texture": "textures/ui/TabRightFrontTopMost",
+                    "size": ["100%", "100%"],
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            },
+            {
+                "slot_container": {
+                    "type": "stack_panel",
+                    "size": [18, 18],
+                    "collection_name": "container_items",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "controls": [
+                        {
+                            "item@chest.trash_grid_item": {
+                                "collection_index": 27
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "trash_icon": {
+                    "type": "image",
+                    "texture": "textures/ui/trash_slot",
+                    "size": [9, 9],
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [2, 2],
+                    "layer": 20,
+                    "alpha": 0.8
+                }
+            }
+        ]
+    },
+
+    "trash_t2_panel": {
+        "type": "panel",
+        "size": [26, 28],
+        "anchor_from": "top_right",
+        "anchor_to": "top_left",
+        "layer": 15,
+        "controls": [
+            {
+                "tab_bg": {
+                    "type": "image",
+                    "texture": "textures/ui/TabRightFrontTopMost",
+                    "size": ["100%", "100%"],
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            },
+            {
+                "slot_container": {
+                    "type": "stack_panel",
+                    "size": [18, 18],
+                    "collection_name": "container_items",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "controls": [
+                        {
+                            "item@chest.trash_grid_item": {
+                                "collection_index": 40
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "trash_icon": {
+                    "type": "image",
+                    "texture": "textures/ui/trash_slot",
+                    "size": [9, 9],
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [2, 2],
+                    "layer": 20,
+                    "alpha": 0.8
+                }
+            }
+        ]
+    },
+
+    "trash_t3_panel": {
+        "type": "panel",
+        "size": [26, 28],
+        "anchor_from": "top_right",
+        "anchor_to": "top_left",
+        "layer": 15,
+        "controls": [
+            {
+                "tab_bg": {
+                    "type": "image",
+                    "texture": "textures/ui/TabRightFrontTopMost",
+                    "size": ["100%", "100%"],
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            },
+            {
+                "slot_container": {
+                    "type": "stack_panel",
+                    "size": [18, 18],
+                    "collection_name": "container_items",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "controls": [
+                        {
+                            "item@chest.trash_grid_item": {
+                                "collection_index": 60
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "trash_icon": {
+                    "type": "image",
+                    "texture": "textures/ui/trash_slot",
+                    "size": [9, 9],
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [2, 2],
+                    "layer": 20,
+                    "alpha": 0.8
+                }
+            }
+        ]
+    },
+
+    "trash_t4_panel": {
+        "type": "panel",
+        "size": [26, 28],
+        "anchor_from": "top_right",
+        "anchor_to": "top_left",
+        "layer": 15,
+        "controls": [
+            {
+                "tab_bg": {
+                    "type": "image",
+                    "texture": "textures/ui/TabRightFrontTopMost",
+                    "size": ["100%", "100%"],
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            },
+            {
+                "slot_container": {
+                    "type": "stack_panel",
+                    "size": [18, 18],
+                    "collection_name": "container_items",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "controls": [
+                        {
+                            "item@chest.trash_grid_item": {
+                                "collection_index": 80
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "trash_icon": {
+                    "type": "image",
+                    "texture": "textures/ui/trash_slot",
+                    "size": [9, 9],
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [2, 2],
+                    "layer": 20,
+                    "alpha": 0.8
+                }
+            }
+        ]
+    },
+
+    "trash_t5_panel": {
+        "type": "panel",
+        "size": [26, 28],
+        "anchor_from": "top_right",
+        "anchor_to": "top_left",
+        "layer": 15,
+        "controls": [
+            {
+                "tab_bg": {
+                    "type": "image",
+                    "texture": "textures/ui/TabRightFrontTopMost",
+                    "size": ["100%", "100%"],
+                    "anchor_from": "center",
+                    "anchor_to": "center"
+                }
+            },
+            {
+                "slot_container": {
+                    "type": "stack_panel",
+                    "size": [18, 18],
+                    "collection_name": "container_items",
+                    "anchor_from": "center",
+                    "anchor_to": "center",
+                    "controls": [
+                        {
+                            "item@chest.trash_grid_item": {
+                                "collection_index": 96
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "trash_icon": {
+                    "type": "image",
+                    "texture": "textures/ui/trash_slot",
+                    "size": [9, 9],
+                    "anchor_from": "top_left",
+                    "anchor_to": "top_left",
+                    "offset": [2, 2],
+                    "layer": 20,
+                    "alpha": 0.8
+                }
+            }
+        ]
+    },
+
+    "small_root_panel@common.root_panel": {
+        "layer": 1,
+        "$chest_panel|default": "chest.small_chest_panel_top_half",
+        "controls": [
+            { "common_panel@common.common_panel": {} },
+            {
+                "chest_panel": {
+                    "type": "panel",
+                    "layer": 5,
+                    "controls": [
+                        { "small_chest_panel_top_half@$chest_panel": {} },
+                        { "inventory_panel_bottom_half_with_label@common.inventory_panel_bottom_half_with_label": {} },
+                        { "hotbar_grid@common.hotbar_grid_template": {} },
+                        { "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {} }
+                    ]
+                }
+            },
+            { "inventory_selected_icon_button@common.inventory_selected_icon_button": {} },
+            { "gamepad_cursor@common.gamepad_cursor_button": {} }
+        ]
+    },
+
+    "t1_grid": {
+        "type": "grid",
+        "size": [162, 54],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [9, 3],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "t1_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 78],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "chest_grid@chest.t1_grid": { "offset": [7, 9] } },
+            { "trash_slot@chest.trash_t1_panel": { "offset": [-4, 25] } }
+        ]
+    },
+
+    "t1_root_panel@chest.small_root_panel": {
+        "size": [176, 166],
+        "$chest_panel": "chest.t1_panel_top_half"
+    },
+
+    "t1_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.t1_root_panel": {} }
+        ]
+    },
+
+    "40_grid": {
+        "type": "grid",
+        "size": [180, 72],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [10, 4],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "40_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 96],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "chest_grid@chest.40_grid": { "offset": [7, 9] } },
+            { "trash_slot@chest.trash_t2_panel": { "offset": [-4, 34] } }
+        ]
+    },
+
+    "40_root_panel@chest.small_root_panel": {
+        "size": [194, 184],
+        "$chest_panel": "chest.40_panel_top_half"
+    },
+
+    "60_grid": {
+        "type": "grid",
+        "size": [270, 72],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [15, 4],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "60_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 96],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "chest_grid@chest.60_grid": { "offset": [7, 9] } },
+            { "trash_slot@chest.trash_t3_panel": { "offset": [-4, 34] } }
+        ]
+    },
+
+    "60_root_panel@chest.small_root_panel": {
+        "size": [284, 184],
+        "$chest_panel": "chest.60_panel_top_half"
+    },
+
+    "77_grid": {
+        "type": "grid",
+        "size": [288, 90],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [16, 5],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "77_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 114],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "chest_grid@chest.77_grid": { "offset": [7, 9] } },
+            { "trash_slot@chest.trash_t4_panel": { "offset": [-4, 43] } }
+        ]
+    },
+
+    "77_root_panel@chest.small_root_panel": {
+        "size": [302, 202],
+        "$chest_panel": "chest.77_panel_top_half"
+    },
+
+    "99_grid": {
+        "type": "grid",
+        "size": [288, 108],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [16, 6],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "99_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 132],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "chest_grid@chest.99_grid": { "offset": [7, 9] } },
+            { "trash_slot@chest.trash_t5_panel": { "offset": [-4, 52] } }
+        ]
+    },
+
+    "99_root_panel@chest.small_root_panel": {
+        "size": [302, 220],
+        "$chest_panel": "chest.99_panel_top_half"
+    },
+
+    "54_grid": {
+        "type": "grid",
+        "size": [162, 108],
+        "anchor_from": "top_left",
+        "anchor_to": "top_left",
+        "grid_dimensions": [9, 6],
+        "grid_item_template": "chest.chest_grid_item",
+        "collection_name": "container_items"
+    },
+
+    "54_panel_top_half": {
+        "type": "panel",
+        "size": ["100%", 132],
+        "offset": [0, 11],
+        "anchor_to": "top_left",
+        "anchor_from": "top_left",
+        "controls": [
+            { "chest_label@chest.chest_label": {} },
+            { "large_chest_grid@chest.54_grid": { "offset": [7, 9] } }
+        ]
+    },
+
+    "54_root_panel@chest.small_root_panel": {
+        "size": [176, 220],
+        "$chest_panel": "chest.54_panel_top_half"
+    },
+
+    "40_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.40_root_panel": {} }
+        ]
+    },
+
+    "60_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.60_root_panel": {} }
+        ]
+    },
+
+    "77_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.77_root_panel": {} }
+        ]
+    },
+
+    "99_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.99_root_panel": {} }
+        ]
+    },
+
+    "54_screen_content": {
+        "type": "panel",
+        "controls": [
+            { "root_panel@chest.54_root_panel": {} }
+        ]
+    },
+
+    "small_chest_screen": {
+        "$fart": "$container_title",
+        "$new_container_title|default": "$container_title",
+        "$container_size|default": 27,
+        "modifications": [
+            {
+                "array_name": "variables",
+                "operation": "insert_back",
+                "value": [
+                    {
+                        "requires": "((not (($fart - 'Corpse') = $fart)) and $desktop_screen)",
+                        "$screen_content": "chest.54_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 54
+                    },
+                    {
+                        "requires": "((not (($fart - 'Corpse') = $fart)) and $pocket_screen)",
+                        "$container_title": "$new_container_title",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 54
+                    },
+                    {
+                        "requires": "(($fart = '\u00A71') and $desktop_screen)",
+                        "$new_container_title": "fabmod.backpack.t1",
+                        "$screen_content": "chest.t1_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 99
+                    },
+                    {
+                        "requires": "(($fart = '\u00A71') and $pocket_screen)",
+                        "$container_title": "fabmod.backpack.t1",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 27
+                    },
+                    {
+                        "requires": "(($fart = '\u00A72') and $desktop_screen)",
+                        "$new_container_title": "fabmod.backpack.t2",
+                        "$screen_content": "chest.40_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 99
+                    },
+                    {
+                        "requires": "(($fart = '\u00A72') and $pocket_screen)",
+                        "$container_title": "fabmod.backpack.t2",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 40
+                    },
+                    {
+                        "requires": "(($fart = '\u00A73') and $desktop_screen)",
+                        "$new_container_title": "fabmod.backpack.t3",
+                        "$screen_content": "chest.60_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 99
+                    },
+                    {
+                        "requires": "(($fart = '\u00A73') and $pocket_screen)",
+                        "$container_title": "fabmod.backpack.t3",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 60
+                    },
+                    {
+                        "requires": "(($fart = '\u00A74') and $desktop_screen)",
+                        "$new_container_title": "fabmod.backpack.t4",
+                        "$screen_content": "chest.77_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 99
+                    },
+                    {
+                        "requires": "(($fart = '\u00A74') and $pocket_screen)",
+                        "$container_title": "fabmod.backpack.t4",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 80
+                    },
+                    {
+                        "requires": "(($fart = '\u00A75') and $desktop_screen)",
+                        "$new_container_title": "fabmod.backpack.t5",
+                        "$screen_content": "chest.99_screen_content",
+                        "$screen_bg_content": "common.screen_background",
+                        "$container_size": 99
+                    },
+                    {
+                        "requires": "(($fart = '\u00A75') and $pocket_screen)",
+                        "$container_title": "fabmod.backpack.t5",
+                        "$screen_content": "pocket_containers.panel",
+                        "$container_size": 99
+                    }
+                ]
+            }
+        ]
+    }
+}

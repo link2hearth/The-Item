@@ -1,0 +1,25 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "fabmod:fireball_shot",
+            "materials": {
+                "default": "fireball"
+            },
+            "textures": {
+                "default": "textures/items/fireball"
+            },
+            "geometry": {
+                "default": "geometry.fireball"
+            },
+            "scripts": {
+                "scale": "0.5",
+                "animate": ["move"]
+            },
+            "animations": {
+                "move": "animation.actor.billboard"
+            },
+            "render_controllers": ["controller.render.fireball"]
+        }
+    }
+}

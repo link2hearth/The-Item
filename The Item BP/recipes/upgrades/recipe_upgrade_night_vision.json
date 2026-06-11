@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_night_vision" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:sculk" },
+      { "item": "minecraft:amethyst_shard" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:glass" },
+      { "item": "minecraft:amethyst_shard" },
+      { "item": "minecraft:glass" },
+      { "item": "minecraft:sculk" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:sculk" },
+      { "item": "minecraft:glass" },
+      { "item": "minecraft:amethyst_shard" },
+      { "item": "minecraft:glass" }
+    ],
+    "result": { "item": "fabmod:upgrade_night_vision" }
+  }
+}

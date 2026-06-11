@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_anti_void" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:elytra" },
+      { "item": "minecraft:chorus_fruit" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:phantom_membrane" },
+      { "item": "minecraft:feather" },
+      { "item": "minecraft:phantom_membrane" },
+      { "item": "minecraft:elytra" },
+      { "item": "fabmod:upgrade_base" },
+      { "item": "minecraft:elytra" },
+      { "item": "minecraft:chorus_fruit" },
+	  { "item": "minecraft:feather" },
+      { "item": "minecraft:chorus_fruit" }
+    ],
+    "result": { "item": "fabmod:upgrade_anti_void" }
+  }
+}

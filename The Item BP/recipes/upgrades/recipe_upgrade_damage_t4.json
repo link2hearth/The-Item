@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_damage_t4" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:diamond_sword" },
+      { "item": "minecraft:diamond_axe" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:golden_sword" },
+      { "item": "minecraft:golden_axe" },
+      { "item": "minecraft:golden_pickaxe" },
+      { "item": "minecraft:ghast_tear" },
+	  { "item": "fabmod:upgrade_base" },
+	  { "item": "minecraft:blaze_rod" },
+      { "item": "minecraft:diamond_pickaxe" },
+      { "item": "minecraft:diamond_sword" },
+      { "item": "minecraft:diamond_axe" }
+    ],
+    "result": { "item": "fabmod:upgrade_damage_t4" }
+  }
+}

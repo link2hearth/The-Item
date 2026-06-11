@@ -1,0 +1,21 @@
+{
+    "format_version": "1.20.80",
+    "minecraft:item": {
+        "description": {
+            "identifier": "fabmod:furnace_perso",
+            "menu_category": {
+                "category": "items"
+            }
+        },
+        "components": {
+            "minecraft:icon": "fabmod:furnace_perso",
+            "minecraft:display_name": {
+                "value": "item.fabmod:furnace_perso.name"
+            },
+            "minecraft:max_stack_size": 1,
+            "minecraft:block_placer": {
+                "block": "minecraft:furnace"
+            }
+        }
+    }
+}

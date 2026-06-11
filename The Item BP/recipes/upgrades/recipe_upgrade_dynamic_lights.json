@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_dynamic_lights" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:torch" },
+      { "item": "minecraft:copper_ingot" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:torch" },
+      { "item": "minecraft:copper_ingot" },
+	  { "item": "minecraft:torch" },
+      { "item": "minecraft:copper_ingot" },
+      { "item": "fabmod:upgrade_base" },
+	  { "item": "minecraft:copper_ingot" },
+	  { "item": "minecraft:torch" },
+      { "item": "minecraft:copper_ingot" },
+	  { "item": "minecraft:torch" }
+    ],
+    "result": { "item": "fabmod:upgrade_dynamic_lights" }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_damage_t3" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:iron_sword" },
+      { "item": "minecraft:golden_sword" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:iron_sword" },
+	  { "item": "minecraft:iron_axe" },
+	  { "item": "minecraft:iron_pickaxe" },
+      { "item": "minecraft:obsidian" },
+	  { "item": "fabmod:upgrade_base" },
+	  { "item": "minecraft:obsidian" },
+      { "item": "minecraft:golden_axe" },
+      { "item": "minecraft:golden_pickaxe" },
+      { "item": "minecraft:golden_sword" }
+    ],
+    "result": { "item": "fabmod:upgrade_damage_t3" }
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+        "description": {
+            "identifier": "fabmod:recipe_furnace_perso"
+        },
+        "tags": ["crafting_table"],
+        "unlock": [
+            { "item": "minecraft:furnace" }
+        ],
+        "pattern": [
+            " F ",
+            "FUF",
+            " F "
+        ],
+        "key": {
+            "F": { "item": "minecraft:furnace" },
+            "U": { "item": "fabmod:upgrade_base" }
+        },
+        "result": {
+            "item": "fabmod:furnace_perso"
+        }
+    }
+}

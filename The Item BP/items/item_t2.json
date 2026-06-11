@@ -1,0 +1,42 @@
+{
+  "format_version": "1.20.80",
+  "minecraft:item": {
+    "description": {
+      "identifier": "fabmod:item_t2",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:icon": "fabmod_item_t2",
+      "minecraft:max_stack_size": 1,
+      "minecraft:digger": {
+        "use_efficiency": true,
+        "destroy_speeds": [
+          {
+            "block": {
+              "tags": "q.any_tag('stone', 'metal', 'wood', 'dirt', 'sand', 'wool', 'leaves', 'bamboo', 'snow', 'clay', 'glass', 'nether_brick', 'ice', 'sponge', 'coral', 'sculk')"
+            },
+            "speed": 6
+          },
+          { "block": "minecraft:hardened_clay",          "speed": 6 },
+          { "block": "minecraft:stained_hardened_clay",  "speed": 6 },
+          { "block": "minecraft:deepslate",              "speed": 6 },
+          { "block": "minecraft:cobbled_deepslate",      "speed": 6 },
+          { "block": "minecraft:polished_deepslate",     "speed": 6 },
+          { "block": "minecraft:deepslate_bricks",       "speed": 6 },
+          { "block": "minecraft:cracked_deepslate_bricks","speed": 6 },
+          { "block": "minecraft:deepslate_tiles",        "speed": 6 },
+          { "block": "minecraft:cracked_deepslate_tiles","speed": 6 },
+          { "block": "minecraft:chiseled_deepslate",     "speed": 6 },
+          { "block": "minecraft:crafting_table",         "speed": 6 },
+          { "block": "minecraft:furnace",                "speed": 6 },
+          { "block": "minecraft:lit_furnace",            "speed": 6 },
+          { "block": "minecraft:tuff",                  "speed": 6 },
+          { "block": "minecraft:netherrack",            "speed": 6 },
+          { "block": "minecraft:gravel",                "speed": 6 }
+        ]
+      }
+    }
+  }
+}

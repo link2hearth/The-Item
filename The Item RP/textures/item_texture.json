@@ -1,0 +1,85 @@
+{
+	"resource_pack_name": "The Item",
+	"texture_name": "atlas.items",
+	"texture_data": {
+		"fabmod:crafting_table_perso": {
+			"textures": "textures/items/crafting_table_infinite"
+		},
+		"fabmod:furnace_perso": {
+			"textures": "textures/items/furnace_perso"
+		},
+		"fabmod:craft_and_cook": {
+			"textures": "textures/items/Craft&Cook"
+		},
+		"fabmod_item": {
+			"textures": "textures/items/item"
+		},
+		"fabmod_item_t1": {
+			"textures": "textures/items/item_t1"
+		},
+		"fabmod_item_t2": {
+			"textures": "textures/items/item_t2"
+		},
+		"fabmod_item_t3": {
+			"textures": "textures/items/item_t3"
+		},
+		"fabmod_item_t4": {
+			"textures": "textures/items/item_t4"
+		},
+		"fabmod_item_t5": {
+			"textures": "textures/items/item_t5"
+		},
+"fabmod:large_backpack": {
+			"textures": "textures/items/backpacks/backpack_large"
+		},
+		"fabmod:upgrade_base":             { "textures": "textures/items/upgrades/upgrade_base" },
+		"fabmod:upgrade_waila":            { "textures": "textures/items/upgrades/upgrade_waila" },
+		"fabmod:upgrade_dynamic_lights":   { "textures": "textures/items/upgrades/upgrade_dynamic_lights" },
+		"fabmod:upgrade_auto_refill":      { "textures": "textures/items/upgrades/upgrade_auto_refill" },
+		"fabmod:upgrade_night_vision":     { "textures": "textures/items/upgrades/upgrade_night_vision" },
+		"fabmod:upgrade_no_fall_damage":   { "textures": "textures/items/upgrades/upgrade_no_fall_damage" },
+		"fabmod:upgrade_agile":            { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_magnet":           { "textures": "textures/items/upgrades/upgrade_magnet" },
+		"fabmod:upgrade_corpse":           { "textures": "textures/items/upgrades/upgrade_corpse" },
+		"fabmod:upgrade_tree_capitator":   { "textures": "textures/items/upgrades/upgrade_tree_capitator" },
+		"fabmod:upgrade_vein_miner":       { "textures": "textures/items/upgrades/upgrade_vein_miner" },
+		"fabmod:upgrade_spawner_silk":     { "textures": "textures/items/upgrades/upgrade_spawner_silk" },
+		"fabmod:upgrade_tp_player_spawn":  { "textures": "textures/items/upgrades/upgrade_tp_player_spawn" },
+		"fabmod:upgrade_tp_home":          { "textures": "textures/items/upgrades/upgrade_tp_home" },
+		"fabmod:upgrade_tp_death":         { "textures": "textures/items/upgrades/upgrade_tp_death" },
+		"fabmod:upgrade_tp_warps":         { "textures": "textures/items/upgrades/upgrade_tp_warps" },
+		"fabmod:upgrade_cheat_backpack":   { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_backpack_t2":      { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_backpack_t3":      { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_backpack_t4":      { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_backpack_t5":      { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_backpack_hover":   { "textures": "textures/items/upgrades/upgrade_cheat_backpack" },
+		"fabmod:upgrade_auto_replant":     { "textures": "textures/items/upgrades/upgrade_auto_replant" },
+		"fabmod:upgrade_keep_item":        { "textures": "textures/items/upgrades/upgrade_keep_item" },
+		"fabmod:upgrade_glowing":          { "textures": "textures/items/upgrades/upgrade_dynamic_lights" },
+		"fabmod:upgrade_anti_void":        { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_water_breathing":  { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_haste":            { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_fire_resistance":  { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_double_xp":        { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_regeneration":     { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_resistance":       { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_strength":         { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_saturation":       { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_double_jump":      { "textures": "textures/items/upgrades/upgrade_agile" },
+		"fabmod:upgrade_damage_t1":        { "textures": "textures/items/upgrades/upgrade_damage_t1" },
+		"fabmod:upgrade_damage_t2":        { "textures": "textures/items/upgrades/upgrade_damage_t2" },
+		"fabmod:upgrade_damage_t3":        { "textures": "textures/items/upgrades/upgrade_damage_t3" },
+		"fabmod:upgrade_damage_t4":        { "textures": "textures/items/upgrades/upgrade_damage_t4" },
+		"fabmod:upgrade_damage_t5":        { "textures": "textures/items/upgrades/upgrade_damage_t5" },
+		"fabmod:upgrade_item_name":        { "textures": "textures/items/upgrades/upgrade_item_name" },
+		"fabmod:upgrade_sharpness":        { "textures": "textures/items/upgrades/upgrade_sharpness" },
+		"fabmod:upgrade_knockback":        { "textures": "textures/items/upgrades/upgrade_knockback" },
+		"fabmod:upgrade_fire_aspect":      { "textures": "textures/items/upgrades/upgrade_fire_aspect" },
+		"fabmod:upgrade_lifesteal":        { "textures": "textures/items/upgrades/upgrade_lifesteal" },
+		"fabmod:upgrade_smite":            { "textures": "textures/items/upgrades/upgrade_smite" },
+		"fabmod:upgrade_sweeping":         { "textures": "textures/items/upgrades/upgrade_sweeping" },
+		"fabmod:upgrade_entity_radar":     { "textures": "textures/items/upgrades/upgrade_waila" },
+		"fabmod:upgrade_fireball_shot":    { "textures": "textures/items/upgrades/upgrade_fire_aspect" }
+	}
+}

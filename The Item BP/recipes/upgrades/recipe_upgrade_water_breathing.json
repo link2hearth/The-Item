@@ -1,0 +1,23 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": { "identifier": "fabmod:recipe_upgrade_water_breathing" },
+    "tags": ["crafting_table"],
+    "unlock": [
+      { "item": "minecraft:conduit" },
+      { "item": "minecraft:heart_of_the_sea" }
+    ],
+    "ingredients": [
+      { "item": "minecraft:sponge" },
+      { "item": "minecraft:heart_of_the_sea" },
+      { "item": "minecraft:sponge" },
+      { "item": "minecraft:potion", "data": 20 },
+      { "item": "fabmod:upgrade_base" },
+	  { "item": "minecraft:potion", "data": 20 },
+      { "item": "minecraft:prismarine_crystals" },
+      { "item": "minecraft:conduit" },
+      { "item": "minecraft:prismarine_crystals" }
+    ],
+    "result": { "item": "fabmod:upgrade_water_breathing" }
+  }
+}

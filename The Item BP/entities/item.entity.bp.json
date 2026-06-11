@@ -1,0 +1,15 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "minecraft:item",
+            "runtime_identifier": "minecraft:item"
+        },
+        "components": {
+            "minecraft:nameable": {
+                "allow_name_tag_renaming": false,
+                "always_show": true
+            }
+        }
+    }
+}
