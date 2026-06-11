@@ -56,17 +56,19 @@ Sharpness · Smite · Knockback · Fire Aspect · Life Steal · Sweeping Edge
 | Tree Capitator | Chop one log and the whole tree falls |
 | Spawner Silk Touch | Mine spawners with a Silk Touch pickaxe and retrieve them |
 
-### Teleportation (6 tiers)
-Unlocked progressively — each tier requires the previous one.
+### Teleportation
 
-| Tier | Feature |
+Some destinations are always available, others require an upgrade.
+
+| Destination | Requirement |
 |---|---|
-| T1 — World Spawn | Teleport to the world spawn |
-| T2 — Player Spawn | Teleport to your bed or respawn point |
-| T3 — Home | Set and teleport to a personal home |
-| T4 — Hub | Shared server-wide hub point |
-| T5 — Warps | Create and manage named warp points |
-| T6 — Player TP | Teleport to other online players (consent toggle) |
+| World Spawn | Always available |
+| Player Spawn | Upgrade: TP Player Spawn |
+| Home | Upgrade: TP Home |
+| Last Death | Upgrade: TP Last Death |
+| Hub | Always available (if set by an admin) |
+| Warps | Always available (if enabled by an admin) |
+| TP to Player | Always available |
 
 All teleportations save your previous location so you can use **Back** to return.
 
