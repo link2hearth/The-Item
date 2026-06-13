@@ -142,6 +142,8 @@ fabmod.msg.tp_back=§oTeleported back
 fabmod.msg.tp_back_fail=§cFailed to teleport back
 fabmod.msg.tp_death=§oTeleported to last death location §r§7(use Back to return)
 fabmod.msg.tp_death_fail=§cNo death location recorded
+fabmod.msg.tp_random=§oRandomly teleported §r§7(use Back to return)
+fabmod.msg.tp_random_fail=§cRandom teleport failed
 fabmod.msg.locked_player_spawn=§cPlayer Spawn locked. Craft and apply the TP Player Spawn upgrade.
 fabmod.msg.locked_home=§cHome locked. Craft and apply the TP Home upgrade.
 fabmod.msg.locked_warps=§cWaypoints locked. Craft and apply the TP Waypoints upgrade.
@@ -540,6 +542,7 @@ fabmod.msg.settings_saved=§o%1 settings saved
 ## UI — Teleportations
 fabmod.ui.title.teleportations=Teleportations
 fabmod.ui.btn.world_spawn=§b§oWorld Spawn
+fabmod.ui.btn.tp_random=§d§oRandom §r§7§o(1000 blocks around spawn)
 fabmod.ui.btn.player_spawn=§a§oPlayer Spawn §r§7§o(bed)
 fabmod.ui.btn.player_spawn_locked=§8§oPlayer Spawn\n§o[LOCKED]
 fabmod.ui.btn.home_set=§a§oHome / Set Home

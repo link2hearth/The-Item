@@ -142,6 +142,8 @@ fabmod.msg.tp_back=§oRetorno realizado
 fabmod.msg.tp_back_fail=§cFalha ao retornar
 fabmod.msg.tp_death=§oTeletransportado para sua última morte §r§7(use Voltar para retornar)
 fabmod.msg.tp_death_fail=§cNenhuma posição de morte registrada
+fabmod.msg.tp_random=§oTeletransportado aleatoriamente §r§7(use Voltar para retornar)
+fabmod.msg.tp_random_fail=§cFalha no teletransporte aleatório
 fabmod.msg.locked_player_spawn=§cSpawn do Jogador bloqueado. Crie e aplique o aprimoramento TP Ponto de Surgimento.
 fabmod.msg.locked_home=§cLar bloqueado. Crie e aplique o aprimoramento TP Lar.
 fabmod.msg.locked_warps=§cPontos de viagem bloqueados. Crie e aplique o aprimoramento TP Pontos de Viagem.
@@ -540,6 +542,7 @@ fabmod.msg.settings_saved=§o%1: configurações salvas
 ## UI — Teletransportes
 fabmod.ui.title.teleportations=Teletransportes
 fabmod.ui.btn.world_spawn=§b§oSpawn do Mundo
+fabmod.ui.btn.tp_random=§d§oAleatório §r§7§o(1000 blocos ao redor do spawn)
 fabmod.ui.btn.player_spawn=§a§oSpawn do Jogador §r§7§o(cama)
 fabmod.ui.btn.player_spawn_locked=§8§oSpawn do Jogador\n§o[BLOQUEADO]
 fabmod.ui.btn.home_set=§a§oLar / Definir

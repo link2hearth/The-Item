@@ -33,6 +33,34 @@ function findSafeY(dimension, x, startY, z) {
     return startY + 1;
 }
 
+// Balaye une zone carrée de rayon `radius` autour de (cx,cz) et retourne la
+// position de surface solide la PLUS PROCHE du centre, ou null si rien.
+// Le pas s'adapte au rayon pour borner le nombre de colonnes testées (~2400 max).
+function findNearestSurface(dimension, cx, cz, radius) {
+    const step = Math.max(1, Math.floor(radius / 24));
+    let best = null, bestD = Infinity;
+    for (let dx = -radius; dx <= radius; dx += step) {
+        for (let dz = -radius; dz <= radius; dz += step) {
+            const d = dx * dx + dz * dz;
+            if (d > radius * radius || d >= bestD) continue;
+            try {
+                // On veut un bloc d'appui (ni liquide ni feuillage) avec DEUX blocs
+                // d'air juste au-dessus. Cela rejette l'eau (de l'eau au-dessus du
+                // fond ≠ air) et les feuilles d'arbre. isSolid n'est pas fiable en 2.6.0.
+                const top = dimension.getTopmostBlock({ x: cx + dx, z: cz + dz });
+                if (!top || top.isLiquid || top.typeId.includes("leaves")) continue;
+                const a1 = dimension.getBlock({ x: top.x, y: top.y + 1, z: top.z });
+                const a2 = dimension.getBlock({ x: top.x, y: top.y + 2, z: top.z });
+                if (a1 && a2 && a1.isAir && a2.isAir) {
+                    best = { x: cx + dx, y: top.y + 1, z: cz + dz };
+                    bestD = d;
+                }
+            } catch {}
+        }
+    }
+    return best;
+}
+
 // ── Teleport ─────────────────────────────────────────────────────────────────
 
 // Même principe que l'addon Waypoints : player.teleport() gère nativement les
@@ -214,6 +242,7 @@ export function teleportMenu(player) {
     const buttons = [];
 
     buttons.push({ label: t("fabmod.ui.btn.world_spawn"), id: "world" });
+    buttons.push({ label: t("fabmod.ui.btn.tp_random"), id: "random" });
     if (playerSpawn) buttons.push({ label: uPlayerSpawn ? t("fabmod.ui.btn.player_spawn") : t("fabmod.ui.btn.player_spawn_locked"), id: "player" });
     buttons.push({ label: uHome ? t("fabmod.ui.btn.home_set") : t("fabmod.ui.btn.home_locked"), id: "home" });
     if (hubExists) buttons.push({ label: t("fabmod.ui.btn.hub"), id: "hub" });
@@ -241,6 +270,45 @@ export function teleportMenu(player) {
                 // car sLoc.y peut être en plein air (spawn sur montagne, valeur stale, etc.)
                 smartTeleport(player, sLoc.x, sLoc.z, world.getDimension("overworld"),
                     () => player.sendMessage(t("fabmod.msg.tp_world_spawn")));
+                break;
+            }
+            case "random": {
+                saveBackLocation(player);
+                const sLoc = world.getDefaultSpawnLocation();
+                const ow = world.getDimension("overworld");
+                // Point aléatoire uniformément réparti dans le disque de 1000 blocs
+                const angle = Math.random() * 2 * Math.PI;
+                const dist = Math.sqrt(Math.random()) * 1000;
+                const rx = Math.floor(sLoc.x + Math.cos(angle) * dist);
+                const rz = Math.floor(sLoc.z + Math.sin(angle) * dist);
+
+                // TP en hauteur (charge le chunk), slow falling pour ne prendre
+                // aucun dégât pendant la recherche de surface.
+                // spreadplayers est inutilisable ici : chunk non chargé → tp à Y max.
+                player.teleport({ x: rx + 0.5, y: 320, z: rz + 0.5 }, { dimension: ow });
+                player.addEffect("slow_falling", 400, { showParticles: false });
+
+                // Cherche un bloc solide dans les 9 chunks autour du joueur. Si rien
+                // (chunks pas encore chargés), réessaie toutes les 0,5 s et élargit
+                // le rayon de recherche jusqu'à trouver la surface la plus proche.
+                let radius = 24;        // ≈ 9 chunks (3×3)
+                let attempts = 0;
+                const id = system.runInterval(() => {
+                    const spot = findNearestSurface(ow, rx, rz, radius);
+                    if (spot) {
+                        system.clearRun(id);
+                        player.teleport({ x: spot.x + 0.5, y: spot.y, z: spot.z + 0.5 }, { dimension: ow });
+                        player.removeEffect("slow_falling");
+                        player.sendMessage(t("fabmod.msg.tp_random"));
+                        return;
+                    }
+                    attempts++;
+                    if (attempts % 2 === 0) radius = Math.min(radius + 24, 240); // ~1 s sans résultat → élargir
+                    if (attempts > 60) {    // garde-fou ~30 s
+                        system.clearRun(id);
+                        player.sendMessage(t("fabmod.msg.tp_random_fail"));
+                    }
+                }, 10);
                 break;
             }
             case "player": {

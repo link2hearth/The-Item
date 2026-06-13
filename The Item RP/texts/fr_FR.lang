@@ -142,6 +142,8 @@ fabmod.msg.tp_back=§oRetour effectué
 fabmod.msg.tp_back_fail=§cÉchec du retour
 fabmod.msg.tp_death=§oTéléporté à votre dernière mort §r§7(utilisez Retour pour revenir)
 fabmod.msg.tp_death_fail=§cAucune position de mort enregistrée
+fabmod.msg.tp_random=§oTéléporté aléatoirement §r§7(utilisez Retour pour revenir)
+fabmod.msg.tp_random_fail=§cÉchec de la téléportation aléatoire
 fabmod.msg.locked_player_spawn=§cPlayer Spawn verrouillé. Fabriquez et appliquez l'upgrade TP Player Spawn.
 fabmod.msg.locked_home=§cMaison verrouillée. Fabriquez et appliquez l'upgrade TP Home.
 fabmod.msg.locked_warps=§cBalises verrouillées. Fabriquez et appliquez l'upgrade TP Balises.
@@ -540,6 +542,7 @@ fabmod.msg.settings_saved=§o%1 : paramètres sauvegardés
 ## UI — Téléportations
 fabmod.ui.title.teleportations=Téléportations
 fabmod.ui.btn.world_spawn=§b§oSpawn du Monde
+fabmod.ui.btn.tp_random=§d§oAléatoire §r§7§o(1000 blocs autour du spawn)
 fabmod.ui.btn.player_spawn=§a§oSpawn Joueur §r§7§o(lit)
 fabmod.ui.btn.player_spawn_locked=§8§oSpawn Joueur\n§o[VERROUILLÉ]
 fabmod.ui.btn.home_set=§a§oMaison / Définir
