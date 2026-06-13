@@ -54,28 +54,49 @@ function dynlightSavePos(player) {
     sdp("dynlight_lastZ", player, Math.floor(loc.z));
 }
 
+// Applique l'éclairage du niveau voulu — ne relance les commandes `fill` que si la
+// position (au bloc près) OU le niveau ont changé depuis le dernier cycle. Tant que le
+// joueur reste immobile sur le même bloc, les light_block sont déjà en place : inutile
+// de les reposer plusieurs fois par seconde (c'était le principal poste de lag).
+function dynlightApply(player, level) {
+    const loc = player.location;
+    const fx = Math.floor(loc.x), fy = Math.floor(loc.y), fz = Math.floor(loc.z);
+    const sameSpot = gdp("dynlight_lastX", player) === fx
+        && gdp("dynlight_lastY", player) === fy
+        && gdp("dynlight_lastZ", player) === fz;
+    const sameLevel = gdp("dynlight_lastLevel", player) === level;
+
+    if (sameSpot && sameLevel && player.hasTag("dynlight_on")) return;
+
+    dynlightCleanPrev(player);
+    player.runCommand(`execute positioned ~~1~ run function ${DYNLIGHT_FN[level]}`);
+    player.addTag("dynlight_on");
+    sdp("dynlight_lastLevel", player, level);
+    dynlightSavePos(player);
+}
+
+function dynlightTurnOff(player) {
+    if (!player.hasTag("dynlight_on")) return;
+    dynlightCleanPrev(player);
+    player.runCommand("execute positioned ~~1~ run function dynlight_off");
+    player.removeTag("dynlight_on");
+    sdp("dynlight_lastX", player, undefined);
+    sdp("dynlight_lastLevel", player, undefined);
+}
+
 eventBus.interval(() => {
     for (const player of world.getPlayers()) {
         const glowingOn = isUnlocked("glowing", player) && (gdp("glowing", player) ?? false);
         const dynLightOn = isUnlocked("dynLight", player) && (gdp("dynLight", player) ?? false);
 
         if (!dynLightOn && !glowingOn) {
-            if (player.hasTag("dynlight_on")) {
-                dynlightCleanPrev(player);
-                player.runCommand("execute positioned ~~1~ run function dynlight_off");
-                player.removeTag("dynlight_on");
-                sdp("dynlight_lastX", player, undefined);
-            }
+            dynlightTurnOff(player);
             continue;
         }
 
         try {
-            dynlightCleanPrev(player);
-
             if (glowingOn) {
-                player.runCommand("execute positioned ~~1~ run function dynlight15");
-                player.addTag("dynlight_on");
-                dynlightSavePos(player);
+                dynlightApply(player, 15);
                 continue;
             }
 
@@ -84,18 +105,11 @@ eventBus.interval(() => {
             const offhand  = equip?.getEquipment(EquipmentSlot.Offhand);
             const level = getDynLightLevel(offhand?.typeId) || getDynLightLevel(mainhand?.typeId);
 
-            if (level > 0) {
-                player.runCommand(`execute positioned ~~1~ run function ${DYNLIGHT_FN[level]}`);
-                player.addTag("dynlight_on");
-                dynlightSavePos(player);
-            } else if (player.hasTag("dynlight_on")) {
-                player.runCommand("execute positioned ~~1~ run function dynlight_off");
-                player.removeTag("dynlight_on");
-                sdp("dynlight_lastX", player, undefined);
-            }
+            if (level > 0) dynlightApply(player, level);
+            else dynlightTurnOff(player);
         } catch (e) {}
     }
-}, 2);
+}, 3);
 
 // ── Passive Effects (Night Vision, Agile, Water Breathing, etc.) ────────────
 

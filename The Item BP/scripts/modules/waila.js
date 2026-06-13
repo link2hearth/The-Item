@@ -106,7 +106,7 @@ eventBus.interval(() => {
     const serverBlockDist = getSetting("waila_blockDist");
 
     for (const player of world.getPlayers()) {
-        player.nameTag = player.name;
+        if (player.nameTag !== player.name) player.nameTag = player.name;
 
         const pos = gdp("p_waila_pos", player) ?? "bc";
         const prevPos = prevWailaPos.get(player.id) ?? pos;
@@ -246,20 +246,37 @@ eventBus.interval(() => {
 
 // ── Item Name floating nameTag ───────────────────────────────────────────────
 
+let itemNameWasActive = false;
+
 eventBus.interval(() => {
-    const serverDist = getSetting("itemName_distance");
-    const serverLos  = getSetting("itemName_los");
+    const dims = ["overworld", "nether", "the_end"];
     const enabledPlayers = world.getPlayers().filter(p =>
         isUnlocked("itemName", p) && (gdp("itemName", p) ?? false)
     );
-    const dims = ["overworld", "nether", "the_end"];
+
+    // Personne n'a l'affichage actif : on évite de balayer les items des 3 dimensions
+    // chaque cycle. Un unique passage de nettoyage est fait quand l'affichage vient
+    // d'être désactivé, puis plus aucun scan tant que ça reste off.
+    if (enabledPlayers.length === 0) {
+        if (!itemNameWasActive) return;
+        itemNameWasActive = false;
+        for (const dimName of dims) {
+            try {
+                const dimension = world.getDimension(dimName);
+                for (const entity of dimension.getEntities({ type: "minecraft:item" })) {
+                    if (entity.nameTag) entity.nameTag = "";
+                }
+            } catch {}
+        }
+        return;
+    }
+    itemNameWasActive = true;
+
+    const serverDist = getSetting("itemName_distance");
+    const serverLos  = getSetting("itemName_los");
     for (const dimName of dims) {
         const dimension = world.getDimension(dimName);
         for (const entity of dimension.getEntities({ type: "minecraft:item" })) {
-            if (enabledPlayers.length === 0) {
-                if (entity.nameTag) entity.nameTag = "";
-                continue;
-            }
             let visible = false;
             for (const player of enabledPlayers) {
                 const maxDist = Math.min(gdp("p_itemName_dist", player) ?? serverDist, serverDist);

@@ -275,11 +275,11 @@ eventBus.interval(() => {
 eventBus.interval(() => {
     for (const player of world.getAllPlayers()) {
         try {
-            const headLoc = player.getHeadLocation()
-            const viewDir = player.getViewDirection()
-            const target = { x: headLoc.x + viewDir.x * 0.1, y: headLoc.y + viewDir.y * 0.1, z: headLoc.z + viewDir.z * 0.1 }
-
             if (player.hasTag("backpack_active")) {
+                const headLoc = player.getHeadLocation()
+                const viewDir = player.getViewDirection()
+                const target = { x: headLoc.x + viewDir.x * 0.1, y: headLoc.y + viewDir.y * 0.1, z: headLoc.z + viewDir.z * 0.1 }
+
                 const entity = findBpForPlayer(player, "cheat_backpack")
                 if (entity) {
                     entity.teleport(target)
@@ -300,7 +300,11 @@ eventBus.interval(() => {
                 continue
             }
 
-            // Hover backpack : sous les pieds, inaccessible quelle que soit la direction
+            // Hover backpack : sous les pieds, inaccessible quelle que soit la direction.
+            // Le scan d'entités (getEntities) n'a lieu que si le hover est débloqué+activé :
+            // hors de ce cas aucune entité hover n'existe, inutile de balayer la dimension
+            // chaque tick. Le rangement d'un éventuel résidu est assuré par l'orphan cleanup.
+            if (!isUnlocked("backpackHover", player) || !gdp("backpackHover", player)) continue
             const hoverBp = findBpForPlayer(player, "hover_backpack")
             if (!hoverBp) continue
             const vd = player.getViewDirection()
@@ -311,9 +315,6 @@ eventBus.interval(() => {
                 dodgeZ = hLen > 0.1 ? -(vd.z / hLen) * 0.2 : 0
             }
             hoverBp.teleport({ x: player.location.x + dodgeX, y: player.location.y - 1, z: player.location.z + dodgeZ })
-            if (!isUnlocked("backpackHover", player) || !gdp("backpackHover", player)) {
-                saveBackpack(hoverBp)
-            }
         } catch {}
     }
 }, 1);
