@@ -27,8 +27,6 @@ const FP_PROP_DIM = "wk_furnace_dim"
 const CT_PROP_POS = "wk_ct_pos"
 const CT_PROP_DIM = "wk_ct_dim"
 
-const ALL_DIMS = ["minecraft:overworld", "minecraft:nether", "minecraft:the_end"]
-
 // ── Noms de ticking areas ─────────────────────────────────────────────────────
 // Four actif (cuisson) : `wkf` + id  — stable, géré par l'interval et le break.
 // Cleanup / hold       : transitoires, uniques par opération (auto-retirées).
@@ -126,12 +124,6 @@ function tryTaAddArea(dim, pos, name, label, radiusChunks) {
     } catch (e) {
         console.warn(`[workstation] tickingarea add threw (${label}) name=${name}: ${e}`)
         return null
-    }
-}
-
-function removeAreaAllDims(name) {
-    for (const d of ALL_DIMS) {
-        try { world.getDimension(d).runCommand(`tickingarea remove ${name}`) } catch {}
     }
 }
 
@@ -385,12 +377,4 @@ eventBus.after("playerBreakBlock", (ev) => {
             removeDrop(dim, pos, "minecraft:crafting_table")
         }
     } catch {}
-})
-
-// Joueur déconnecté : libérer son slot de cuisson (inutile de cuire pour un
-// propriétaire absent). On garde la position sauvegardée pour son retour.
-eventBus.after("playerLeave", (ev) => {
-    const digits = id8FromString(ev.playerId)
-    if (digits) removeAreaAllDims(`wkf${digits}`)
-    furnaceArmed.delete(ev.playerId)
 })
