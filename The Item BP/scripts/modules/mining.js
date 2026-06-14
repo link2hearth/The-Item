@@ -105,8 +105,8 @@ function hasBlockNearby(dimension, center, radius, typeIds) {
 // ── Zone de stockage distante ─────────────────────────────────────────────────
 
 const STORAGE_CONF = {
-    "minecraft:overworld": { x: 100000, y: -58, z: 0, tick: "spawner_store_ow" },
-    "minecraft:nether":    { x: 100000, y:  20, z: 0, tick: "spawner_store_ne" },
+    "minecraft:overworld": { x: 100000, y: -58, z: 0 },
+    "minecraft:nether":    { x: 100000, y:  20, z: 0 },
 };
 
 // Offset par face pour calculer la position de pose
@@ -149,36 +149,56 @@ function freeSlot(slot) {
     world.setDynamicProperty("sk_free", JSON.stringify(free));
 }
 
-function getStorageCount(dimId) {
-    return world.getDynamicProperty("sk_n_" + (dimId === "minecraft:nether" ? "ne" : "ow")) ?? 0;
-}
+// Noms de zones temporaires uniques par opération. Le chunk de stockage n'est
+// chargé QUE le temps d'un clone, jamais en permanence → 0 slot de ticking area
+// consommé au repos. Plusieurs opérations simultanées posent chacune leur zone
+// et retirent la leur : le chunk reste chargé tant qu'au moins une est en cours.
+let storageAreaSeq = 0;
+function nextStorageArea() { return `sks${(storageAreaSeq++) % 100000}`; }
 
-function changeStorageCount(dimId, delta) {
-    const key = "sk_n_" + (dimId === "minecraft:nether" ? "ne" : "ow");
-    const n = Math.max(0, (world.getDynamicProperty(key) ?? 0) + delta);
-    world.setDynamicProperty(key, n);
-    return n;
-}
+// Pose une zone de tick temporaire sur le chunk de stockage puis RETENTE
+// `attempt(dim)` toutes les 5 ticks jusqu'à ce qu'il renvoie true. Le clone
+// lui-même sert de test de disponibilité : un chunk « lisible » via getBlock
+// n'est pas toujours prêt à recevoir un clone (chargement asynchrone). La zone
+// est retirée dès que l'opération réussit. Garde-fou : abandon après ~60 s →
+// onFail(). Même logique que cleanupWhenLoaded dans workstation.js.
+function withStorageLoaded(dimId, pos, attempt, onFail) {
+    const dim  = world.getDimension(dimId);
+    const area = nextStorageArea();
+    // « true » = preload : force le chargement immédiat. Indispensable ici car le
+    // chunk de stockage (X=100000) est très loin du joueur et jamais généré — sans
+    // ce flag la zone est enregistrée mais le chunk reste déchargé (getBlock échoue).
+    try { dim.runCommand(`tickingarea add ${pos.x} ${pos.y} ${pos.z} ${pos.x} ${pos.y} ${pos.z} ${area} true`); } catch {}
 
-function setupStorage(dimId) {
-    const c = STORAGE_CONF[dimId];
-    const dim = world.getDimension(dimId);
-    // Ticking area : 1 seul chunk (X=100000 aligné chunk → chunk 6250,0)
-    try { dim.runCommand(`tickingarea add ${c.x} ${c.y} ${c.z} ${c.x} ${c.y} ${c.z} ${c.tick} true`); } catch {}
-}
+    let attempts = 0;
+    const MAX = 240; // 240 × 5 ticks = 1200 ticks ≈ 60 s
 
-function teardownStorage(dimId) {
-    try { world.getDimension(dimId).runCommand(`tickingarea remove ${STORAGE_CONF[dimId].tick}`); } catch {}
-}
+    const finish = () => { try { dim.runCommand(`tickingarea remove ${area}`); } catch {} };
 
-// Restaurer les ticking areas au démarrage si des spawners sont en attente
-system.run(() => {
-    for (const dimId of Object.keys(STORAGE_CONF)) {
-        if (getStorageCount(dimId) > 0) setupStorage(dimId);
-    }
-});
+    const step = () => {
+        attempts++;
+        // Le chunk doit d'abord être lisible, puis l'opération doit réussir.
+        let ready = false;
+        try { ready = !!dim.getBlock(pos); } catch { ready = false; }
+        if (ready) {
+            let ok = false;
+            try { ok = attempt(dim) === true; } catch {}
+            if (ok) { finish(); return; }
+        }
+
+        if (attempts >= MAX) { finish(); try { onFail?.(); } catch {} return; }
+        system.runTimeout(step, 5);
+    };
+
+    system.runTimeout(step, 5);
+}
 
 // ── Récupération : beforeEvents.playerBreakBlock ──────────────────────────────
+
+// Récupérations en cours (par joueur) : tant qu'une l'est, les re-cassages du même
+// spawner (le break se redéclenche en boucle car on annule) sont ignorés — sinon on
+// empilerait plusieurs menus/clones en parallèle.
+const pickupInProgress = new Set();
 
 world.beforeEvents.playerBreakBlock.subscribe((ev) => {
     if (ev.block.typeId !== spawnerID) return;
@@ -190,24 +210,31 @@ world.beforeEvents.playerBreakBlock.subscribe((ev) => {
     if (!STORAGE_CONF[player.dimension.id]) return; // The End ou autre → ignoré
 
     ev.cancel = true;
+    if (pickupInProgress.has(player.id)) return; // déjà une récupération en cours
+    pickupInProgress.add(player.id);
+
     const loc = { ...ev.block.location };
     const dim = player.dimension;
     const dimId = dim.id;
+    // Sécurité : libère le verrou même si rien n'aboutit (joueur qui abandonne).
+    system.runTimeout(() => pickupInProgress.delete(player.id), 1200);
     system.run(() => processPickup(player, loc, dim, dimId));
 });
 
 function processPickup(player, loc, dim, dimId) {
-    // Détection automatique
+    const finish = () => pickupInProgress.delete(player.id);
+
+    // Détection automatique → pas de menu
     if (dimId === "minecraft:nether") {
-        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:blaze_spawn_egg"));
+        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:blaze_spawn_egg"), finish);
         return;
     }
     if (hasBlockNearby(dim, loc, 12, ["minecraft:end_portal_frame"])) {
-        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:silverfish_spawn_egg"));
+        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:silverfish_spawn_egg"), finish);
         return;
     }
     if (hasBlockNearby(dim, loc, 5, ["minecraft:web", "minecraft:cobweb"])) {
-        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:cave_spider_spawn_egg"));
+        doPickup(player, loc, dimId, SPAWNER_MOBS.find(m => m.egg === "minecraft:cave_spider_spawn_egg"), finish);
         return;
     }
 
@@ -217,42 +244,49 @@ function processPickup(player, loc, dim, dimId) {
     const mobList = isDungeon ? SPAWNER_MOBS_DUNGEON : SPAWNER_MOBS_OVERWORLD;
     const defaultIdx = recentEgg ? Math.max(0, mobList.findIndex(m => m.egg === recentEgg)) : 0;
 
-    new ModalFormData()
-        .title("Spawner — Type de mob")
-        .dropdown("Quel mob était dans ce spawner ?", mobList.map(m => m.name), defaultIdx)
-        .show(player).then(res => {
-            if (res.canceled) {
-                player.sendMessage("§7Annulé — le spawner reste en place.");
-                return;
-            }
-            doPickup(player, loc, dimId, mobList[res.formValues[0]]);
-        });
+    showSpawnerForm(player, mobList, defaultIdx, loc, dimId, finish, 0);
 }
 
-function doPickup(player, loc, dimId, mobEntry) {
+// En Survie, le joueur maintient le clic de minage → il est « occupé » et
+// ModalFormData.show() reste EN ATTENTE indéfiniment (la promesse ne résout pas).
+// On ne peut donc pas se fier au résultat du show précédent : on relance un NOUVEAU
+// show toutes les 20 ticks tant que le joueur n'a pas répondu. Dès qu'il relâche,
+// l'un des show s'affiche, il répond → state.done coupe les relances suivantes.
+function showSpawnerForm(player, mobList, defaultIdx, loc, dimId, finish, tries, state) {
+    state = state ?? { done: false };
+    if (state.done) return;
+    if (tries > 60) { state.done = true; finish(); player.sendMessage("§7Relâche le minage puis recommence pour choisir le mob."); return; }
+
+    // Relance armée AVANT le show : si show() lève une exception synchrone, la
+    // boucle continue quand même (sinon tout s'arrête silencieusement).
+    system.runTimeout(() => { if (!state.done) showSpawnerForm(player, mobList, defaultIdx, loc, dimId, finish, tries + 1, state); }, 20);
+
+    try {
+        const form = new ModalFormData()
+            .title("Spawner — Type de mob")
+            .dropdown("Quel mob était dans ce spawner ?", mobList.map(m => m.name), { defaultValueIndex: defaultIdx });
+
+        form.show(player).then(res => {
+            if (state.done) return;
+            if (res.canceled && res.cancelationReason === "UserBusy") return; // occupé → la relance réessaiera
+            state.done = true;
+            if (res.canceled) { finish(); player.sendMessage("§7Annulé — le spawner reste en place."); return; }
+            doPickup(player, loc, dimId, mobList[res.formValues[0]], finish);
+        }).catch(() => {});
+    } catch {}
+}
+
+function doPickup(player, loc, dimId, mobEntry, finish) {
     const slot = allocateSlot();
     const sPos = storagePos(dimId, slot);
-    const dim = world.getDimension(dimId);
-    const isFirst = getStorageCount(dimId) === 0;
 
-    if (isFirst) setupStorage(dimId);
-
-    const execute = () => {
-        let ok = false;
-        try {
-            const r = dim.runCommand(`clone ${loc.x} ${loc.y} ${loc.z} ${loc.x} ${loc.y} ${loc.z} ${sPos.x} ${sPos.y} ${sPos.z} replace move`);
-            ok = r?.successCount > 0;
-        } catch {}
-
-        if (!ok) {
-            freeSlot(slot);
-            player.sendMessage("§cZone de stockage non encore chargée — réessaie dans 2 secondes.");
-            // Remettre le spawner à sa place
-            try { dim.runCommand(`setblock ${loc.x} ${loc.y} ${loc.z} minecraft:mob_spawner`); } catch {}
-            return;
-        }
-
-        changeStorageCount(dimId, 1);
+    withStorageLoaded(dimId, sPos, (dim) => {
+        // clone … move : déplace le spawner (avec son mob) du monde vers le stockage.
+        // Tant que le chunk de stockage n'est pas prêt, successCount = 0 → on retente
+        // (rien n'est déplacé, le spawner d'origine reste intact).
+        let r;
+        try { r = dim.runCommand(`clone ${loc.x} ${loc.y} ${loc.z} ${loc.x} ${loc.y} ${loc.z} ${sPos.x} ${sPos.y} ${sPos.z} replace move`); } catch { return false; }
+        if (!(r?.successCount > 0)) return false;
 
         const dimLabel = dimId === "minecraft:nether" ? "Nether" : "Overworld";
         const fakeItem = new ItemStack(spawnerID, 1);
@@ -267,11 +301,15 @@ function doPickup(player, loc, dimId, mobEntry) {
         else dim.spawnItem(fakeItem, player.location);
 
         player.sendMessage(`§aSpawner §6${mobEntry?.name ?? ""}§a récupéré — pose-le dans l'${dimLabel}.`);
-    };
-
-    // Premier usage : attendre 1 seconde que le chunk de stockage charge
-    if (isFirst) system.runTimeout(execute, 20);
-    else execute();
+        finish();
+        return true;
+    }, () => {
+        // Le clone n'a jamais abouti (chunk jamais prêt) : le spawner d'origine est
+        // INTACT (break annulé), on n'y touche pas — on libère juste le slot réservé.
+        freeSlot(slot);
+        finish();
+        player.sendMessage("§cZone de stockage indisponible — spawner laissé en place, réessaie.");
+    });
 }
 
 // ── Pose : beforeEvents.playerInteractWithBlock ───────────────────────────────
@@ -314,38 +352,36 @@ world.beforeEvents.playerInteractWithBlock.subscribe((ev) => {
     const player = ev.player;
 
     system.run(() => {
-        const dim = world.getDimension(storedDimId);
         const sPos = storagePos(storedDimId, slot);
-        let ok = false;
-        try {
-            const r = dim.runCommand(`clone ${sPos.x} ${sPos.y} ${sPos.z} ${sPos.x} ${sPos.y} ${sPos.z} ${targetLoc.x} ${targetLoc.y} ${targetLoc.z} replace move`);
-            ok = r?.successCount > 0;
-        } catch {}
+        withStorageLoaded(storedDimId, sPos, (dim) => {
+            // clone … move : déplace le spawner du stockage vers le monde. Tant que
+            // le chunk de stockage n'est pas prêt, successCount = 0 → on retente
+            // (le spawner stocké reste en place, l'item du joueur n'est pas consommé).
+            let r;
+            try { r = dim.runCommand(`clone ${sPos.x} ${sPos.y} ${sPos.z} ${sPos.x} ${sPos.y} ${sPos.z} ${targetLoc.x} ${targetLoc.y} ${targetLoc.z} replace move`); } catch { return false; }
+            if (!(r?.successCount > 0)) return false;
 
-        if (!ok) {
-            player.sendMessage("§cImpossible de placer le spawner ici.");
-            return;
-        }
+            // Libérer le slot
+            freeSlot(slot);
 
-        // Libérer le slot
-        freeSlot(slot);
-        const remaining = changeStorageCount(storedDimId, -1);
-        if (remaining === 0) teardownStorage(storedDimId);
-
-        // Supprimer l'item factice de l'inventaire
-        const inv = player.getComponent("minecraft:inventory")?.container;
-        if (inv) {
-            for (let i = 0; i < inv.size; i++) {
-                const it = inv.getItem(i);
-                if (!it || it.typeId !== spawnerID) continue;
-                if ((it.getLore?.() ?? []).some(l => l === tag)) {
-                    inv.setItem(i, undefined);
-                    break;
+            // Supprimer l'item factice de l'inventaire
+            const inv = player.getComponent("minecraft:inventory")?.container;
+            if (inv) {
+                for (let i = 0; i < inv.size; i++) {
+                    const it = inv.getItem(i);
+                    if (!it || it.typeId !== spawnerID) continue;
+                    if ((it.getLore?.() ?? []).some(l => l === tag)) {
+                        inv.setItem(i, undefined);
+                        break;
+                    }
                 }
             }
-        }
 
-        player.sendMessage("§aSpawner posé !");
+            player.sendMessage("§aSpawner posé !");
+            return true;
+        }, () => {
+            player.sendMessage("§cZone de stockage indisponible — réessaie dans quelques secondes.");
+        });
     });
 });
 
