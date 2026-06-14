@@ -4,6 +4,9 @@ import { isUnlocked } from "../core/data.js"
 import { openMenu } from "../menus/router.js"
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui"
 
+// Anti-spam du TP aléatoire : 2 min entre deux téléportations (par joueur).
+const RANDOM_TP_COOLDOWN_MS = 2 * 60 * 1000;
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 // Retourne le Y juste au-dessus de la surface via getTopmostBlock (Y=320 → bas).
@@ -273,12 +276,22 @@ export function teleportMenu(player) {
                 break;
             }
             case "random": {
+                // Anti-spam : refuse si la dernière TP aléatoire date de moins de 2 min.
+                const now = Date.now();
+                const last = gdp("tp_random_last", player) ?? 0;
+                const remainingMs = RANDOM_TP_COOLDOWN_MS - (now - last);
+                if (remainingMs > 0) {
+                    player.sendMessage(t("fabmod.msg.tp_random_cooldown", Math.ceil(remainingMs / 1000)));
+                    return;
+                }
+                sdp("tp_random_last", player, now);
+
                 saveBackLocation(player);
                 const sLoc = world.getDefaultSpawnLocation();
                 const ow = world.getDimension("overworld");
-                // Point aléatoire uniformément réparti dans le disque de 1000 blocs
+                // Point aléatoire uniformément réparti dans le disque de 100000 blocs
                 const angle = Math.random() * 2 * Math.PI;
-                const dist = Math.sqrt(Math.random()) * 1000;
+                const dist = Math.sqrt(Math.random()) * 100000;
                 const rx = Math.floor(sLoc.x + Math.cos(angle) * dist);
                 const rz = Math.floor(sLoc.z + Math.sin(angle) * dist);
 
