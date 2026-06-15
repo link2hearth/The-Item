@@ -25,6 +25,13 @@ export function saveClaims(claims) {
     world.setDynamicProperty("chunkClaims", JSON.stringify(claims));
 }
 
+// True si le bloc (x,z) de la dimension dimId est dans un chunk revendiqué.
+// `claims` peut être passé pour éviter de re-parser le JSON à chaque appel.
+export function isChunkClaimed(x, z, dimId, claims = loadClaims()) {
+    const key = `${Math.floor(x / 16)},${Math.floor(z / 16)},${dimId}`;
+    return claims[key] !== undefined;
+}
+
 export function getMaxChunks() {
     return world.getDynamicProperty("maxChunksPerPlayer") ?? 50;
 }

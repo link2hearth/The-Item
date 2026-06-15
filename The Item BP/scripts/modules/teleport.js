@@ -3,6 +3,7 @@ import { gdp, sdp, t, setMenu, saveBackLocation } from "../core/utils.js"
 import { isUnlocked } from "../core/data.js"
 import { openMenu } from "../menus/router.js"
 import { ActionFormData, ModalFormData } from "@minecraft/server-ui"
+import { loadClaims, isChunkClaimed } from "./chunks.js"
 
 // Anti-spam du TP aléatoire : 2 min entre deux téléportations (par joueur).
 const RANDOM_TP_COOLDOWN_MS = 2 * 60 * 1000;
@@ -39,13 +40,16 @@ function findSafeY(dimension, x, startY, z) {
 // Balaye une zone carrée de rayon `radius` autour de (cx,cz) et retourne la
 // position de surface solide la PLUS PROCHE du centre, ou null si rien.
 // Le pas s'adapte au rayon pour borner le nombre de colonnes testées (~2400 max).
-function findNearestSurface(dimension, cx, cz, radius) {
+// `claims` (optionnel) : si fourni, les colonnes situées dans un chunk
+// revendiqué sont ignorées.
+function findNearestSurface(dimension, cx, cz, radius, claims = null) {
     const step = Math.max(1, Math.floor(radius / 24));
     let best = null, bestD = Infinity;
     for (let dx = -radius; dx <= radius; dx += step) {
         for (let dz = -radius; dz <= radius; dz += step) {
             const d = dx * dx + dz * dz;
             if (d > radius * radius || d >= bestD) continue;
+            if (claims && isChunkClaimed(cx + dx, cz + dz, dimension.id, claims)) continue;
             try {
                 // On veut un bloc d'appui (ni liquide ni feuillage) avec DEUX blocs
                 // d'air juste au-dessus. Cela rejette l'eau (de l'eau au-dessus du
@@ -289,11 +293,17 @@ export function teleportMenu(player) {
                 saveBackLocation(player);
                 const sLoc = world.getDefaultSpawnLocation();
                 const ow = world.getDimension("overworld");
-                // Point aléatoire uniformément réparti dans le disque de 100000 blocs
-                const angle = Math.random() * 2 * Math.PI;
-                const dist = Math.sqrt(Math.random()) * 100000;
-                const rx = Math.floor(sLoc.x + Math.cos(angle) * dist);
-                const rz = Math.floor(sLoc.z + Math.sin(angle) * dist);
+                const claims = loadClaims();
+                // Point aléatoire uniformément réparti dans le disque de 100000 blocs.
+                // On re-tire tant que le point tombe dans un chunk revendiqué (max 12 essais).
+                let rx, rz;
+                for (let i = 0; i < 12; i++) {
+                    const angle = Math.random() * 2 * Math.PI;
+                    const dist = Math.sqrt(Math.random()) * 100000;
+                    rx = Math.floor(sLoc.x + Math.cos(angle) * dist);
+                    rz = Math.floor(sLoc.z + Math.sin(angle) * dist);
+                    if (!isChunkClaimed(rx, rz, ow.id, claims)) break;
+                }
 
                 // TP en hauteur (charge le chunk), slow falling pour ne prendre
                 // aucun dégât pendant la recherche de surface.
@@ -307,7 +317,7 @@ export function teleportMenu(player) {
                 let radius = 24;        // ≈ 9 chunks (3×3)
                 let attempts = 0;
                 const id = system.runInterval(() => {
-                    const spot = findNearestSurface(ow, rx, rz, radius);
+                    const spot = findNearestSurface(ow, rx, rz, radius, claims);
                     if (spot) {
                         system.clearRun(id);
                         player.teleport({ x: spot.x + 0.5, y: spot.y, z: spot.z + 0.5 }, { dimension: ow });
