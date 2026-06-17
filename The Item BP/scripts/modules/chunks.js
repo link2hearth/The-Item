@@ -126,8 +126,8 @@ function getChunkParticle(claims, cx, cz, dimId, playerName) {
     return "fabmod:chunk_wall_red";
 }
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (!player.hasTag("chunk_viz")) continue;
 
         const claims = loadClaims();
@@ -172,8 +172,8 @@ eventBus.interval(() => {
 
 // ── Ticking area preview ────────────────────────────────────────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (!player.hasTag("ticking_preview")) continue;
         const cx = gdp("tickPreviewCx", player);
         const cz = gdp("tickPreviewCz", player);

@@ -296,8 +296,8 @@ function placeTable(player, currentDim, placedPos) {
 // Toutes les ~20 ticks (1 s) : si le four d'un joueur est allumé (lit_furnace),
 // on garde sa zone active pour qu'il continue à cuire hors de portée ; dès qu'il
 // est éteint (furnace), on retire la zone → le slot est libéré.
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const data = getFpData(player)
         if (!data) { furnaceArmed.delete(player.id); continue }
 

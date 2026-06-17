@@ -1,4 +1,4 @@
-import { world, EquipmentSlot } from "@minecraft/server"
+import { EquipmentSlot } from "@minecraft/server"
 import { gdp, sdp, t, safeAddEffect } from "../core/utils.js"
 import { isUnlocked, backpackIDs } from "../core/data.js"
 import { eventBus } from "../core/eventBus.js"
@@ -21,12 +21,24 @@ const DYNLIGHT_ITEMS = {
     6:  ["dragon_breath","ender_eye","magma","blaze_rod","blaze_powder","glow_ink_sac","glow_berries","glowstone_dust","experience_bottle"]
 };
 
+// Mémoïsation par itemId : DYNLIGHT_ITEMS est constant, le niveau d'un item donné ne
+// change jamais. On ne paie la double boucle includes qu'une fois par typeId, ensuite
+// lookup O(1) — utile car appelé toutes les 3 ticks par joueur avec dynlight actif.
+// On préserve la sémantique d'origine : premier niveau qui matche dans l'ordre de
+// Object.entries (croissant), donc le plus petit niveau gagne.
+const dynLightLevelCache = new Map();
+
 function getDynLightLevel(itemId) {
     if (!itemId) return 0;
+    const cached = dynLightLevelCache.get(itemId);
+    if (cached !== undefined) return cached;
+    let level = 0;
     for (const [lvl, arr] of Object.entries(DYNLIGHT_ITEMS)) {
-        for (const key of arr) { if (itemId.includes(key)) return Number(lvl); }
+        for (const key of arr) { if (itemId.includes(key)) { level = Number(lvl); break; } }
+        if (level) break;
     }
-    return 0;
+    dynLightLevelCache.set(itemId, level);
+    return level;
 }
 
 const DYNLIGHT_FN = { 15: "dynlight15", 13: "dynlight13", 11: "dynlight11", 9: "dynlight9", 6: "dynlight6" };
@@ -84,8 +96,8 @@ function dynlightTurnOff(player) {
     sdp("dynlight_lastLevel", player, undefined);
 }
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const glowingOn = isUnlocked("glowing", player) && (gdp("glowing", player) ?? false);
         const dynLightOn = isUnlocked("dynLight", player) && (gdp("dynLight", player) ?? false);
 
@@ -113,8 +125,8 @@ eventBus.interval(() => {
 
 // ── Passive Effects (Night Vision, Agile, Water Breathing, etc.) ────────────
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             if (isUnlocked("nightVision", player) && (gdp("nightVision", player) ?? false))
                 safeAddEffect(player, "night_vision", 400, 0);
@@ -140,8 +152,8 @@ eventBus.interval(() => {
 
 // ── Saturation (partial hunger refill) ──────────────────────────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (!isUnlocked("saturation", player) || !(gdp("saturation", player) ?? false)) continue;
         try {
             const hungerComp = player.getComponent("minecraft:player.hunger");
@@ -194,8 +206,8 @@ eventBus.after("playerButtonInput", (ev) => {
 });
 
 // Ground detection for double jump
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (player.isOnGround) {
             player.addTag("djump_grounded");
             player.removeTag("djump_used");
@@ -235,9 +247,9 @@ function applyRadarGlow(player, serverRadius) {
 }
 
 // Maintien du glow (mode normal) + keepalive pendant le sneak
-eventBus.interval(() => {
+eventBus.playerInterval((players) => {
     const serverRadius = getSetting("entityRadar_radius");
-    for (const player of world.getPlayers()) {
+    for (const player of players) {
         if (!isUnlocked("entityRadar", player) || !(gdp("entityRadar", player) ?? false)) continue;
         try {
             const sneakOnly = gdp("p_entityRadar_sneak", player) ?? false;
@@ -258,9 +270,9 @@ eventBus.after("playerButtonInput", (ev) => {
 
 // ── Magnet ──────────────────────────────────────────────────────────────────
 
-eventBus.interval(() => {
+eventBus.playerInterval((players) => {
     const serverRadius = getSetting("magnet_radius");
-    for (const player of world.getPlayers()) {
+    for (const player of players) {
         if (!isUnlocked("magnet", player) || !gdp("magnet", player)) continue;
 
         const radius = Math.min(gdp("p_magnet_radius", player) ?? serverRadius, serverRadius);

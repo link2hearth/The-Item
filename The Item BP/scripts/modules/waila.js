@@ -101,11 +101,11 @@ function showWaila(player, pos, content) {
     }
 }
 
-eventBus.interval(() => {
+eventBus.playerInterval((players) => {
     const serverEntityDist = getSetting("waila_entityDist");
     const serverBlockDist = getSetting("waila_blockDist");
 
-    for (const player of world.getPlayers()) {
+    for (const player of players) {
         if (player.nameTag !== player.name) player.nameTag = player.name;
 
         const pos = gdp("p_waila_pos", player) ?? "bc";
@@ -124,8 +124,14 @@ eventBus.interval(() => {
         const blockDist = Math.min(gdp("p_waila_blockDist", player) ?? serverBlockDist, serverBlockDist);
 
         try {
-            const entityHits = player.getEntitiesFromViewDirection({ maxDistance: entityDist });
-            const mobHit = entityHits.find(h =>
+            // Un seul raycast d'entités couvrant la plus grande des deux portées,
+            // puis tri mob/item dans le résultat (déjà ordonné par distance) — évite
+            // un second raycast par joueur et par cycle.
+            const hits = player.getEntitiesFromViewDirection({ maxDistance: Math.max(entityDist, blockDist) });
+
+            // Priorité au mob (jusqu'à entityDist), même si un item est plus proche
+            const mobHit = hits.find(h =>
+                h.distance <= entityDist &&
                 h.entity.typeId !== "minecraft:player" &&
                 h.entity.typeId !== "minecraft:item" &&
                 h.entity.typeId !== "fabmod:player_corpse" &&
@@ -140,19 +146,16 @@ eventBus.interval(() => {
                 showWaila(player, pos, content);
                 continue;
             }
-        } catch (e) { console.warn("[WAILA] entity error:", e); }
 
-        try {
-            const itemHits = player.getEntitiesFromViewDirection({ maxDistance: blockDist })
-                .filter(h => h.entity.typeId === "minecraft:item");
-            if (itemHits.length > 0) {
-                const itemStack = itemHits[0].entity.getComponent("minecraft:item")?.itemStack;
+            const itemHit = hits.find(h => h.distance <= blockDist && h.entity.typeId === "minecraft:item");
+            if (itemHit) {
+                const itemStack = itemHit.entity.getComponent("minecraft:item")?.itemStack;
                 if (itemStack) {
                     showWaila(player, pos, translatedItemName(itemStack));
                     continue;
                 }
             }
-        } catch (e) { console.warn("[WAILA] item error:", e); }
+        } catch (e) { console.warn("[WAILA] entity error:", e); }
 
         try {
             const blockHit = player.getBlockFromViewDirection({ maxDistance: blockDist });
@@ -242,7 +245,7 @@ eventBus.interval(() => {
             }
         } catch (e) { console.warn("[WAILA] block error:", e); }
     }
-}, 2);
+}, 3);
 
 // ── Item Name floating nameTag ───────────────────────────────────────────────
 

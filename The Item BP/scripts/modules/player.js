@@ -146,8 +146,8 @@ eventBus.after("playerSpawn", (ev) => {
 
 // ── Playtime + Anti-dupe + XP Tracking (every 100 ticks) ────────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         // Safety net: init unregistered players
         if (gdp("playerJoined", player) === undefined) {
             initNewPlayer(player);
@@ -200,9 +200,15 @@ eventBus.after("entityDie", (ev) => {
     if (source?.damagingEntity instanceof Player) {
         const killer = source.damagingEntity;
         if (!(ev.deadEntity instanceof Player)) {
+            // stat_mobsKilled = tous les mobs (stat générale) ; stat_monstersKilled =
+            // uniquement la famille "monster" (mobs hostiles), base des succès de kills
+            // pour ne pas les déclencher en tuant un animal passif (mouton, vache…).
+            const isMonster = ev.deadEntity.getComponent("minecraft:type_family")?.hasTypeFamily("monster") ?? false;
             const newKills = (gdp("stat_mobsKilled", killer) ?? 0) + 1;
             sdp("stat_mobsKilled", killer, newKills);
-            onMobKilledByPlayer(killer, newKills, ev.deadEntity.typeId);
+            let monsterKills = gdp("stat_monstersKilled", killer) ?? 0;
+            if (isMonster) sdp("stat_monstersKilled", killer, ++monsterKills);
+            onMobKilledByPlayer(killer, monsterKills, ev.deadEntity.typeId);
             recordMobKill(killer, ev.deadEntity.typeId);
         }
     }

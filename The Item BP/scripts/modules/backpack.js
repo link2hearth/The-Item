@@ -4,11 +4,40 @@ import { isUnlocked, backpackIDs, backpackData, unallowedItems, BACKPACK_TIERS, 
 import { eventBus } from "../core/eventBus.js"
 import { getSetting } from "../core/settings.js"
 
+// Cache des références backpack par joueur+tag pour éviter un getEntities (scan de
+// dimension) à chaque tick. Le cache s'auto-invalide : une entité supprimée (isValid
+// false), passée dans une autre dimension, ou dont le playerID/tag ne colle plus
+// déclenche un nouveau scan. saveBackpack() appelle entity.remove(), ce qui invalide
+// naturellement l'entrée au cycle suivant.
+const bpRefCache = new Map()
+
 // Retourne l'entité backpack d'un joueur avec le tag donné, dans sa dimension actuelle
 function findBpForPlayer(player, tag) {
+    const key = player.id + ":" + tag
+    const cached = bpRefCache.get(key)
+    if (cached) {
+        try {
+            if (cached.isValid
+                && cached.dimension.id === player.dimension.id
+                && cached.getDynamicProperty("playerID") === player.id
+                && cached.hasTag(tag)) {
+                return cached
+            }
+        } catch {}
+        bpRefCache.delete(key)
+    }
     const entities = player.dimension.getEntities({ tags: [tag] })
-    return entities.find(e => e.getDynamicProperty("playerID") === player.id) ?? null
+    const found = entities.find(e => e.getDynamicProperty("playerID") === player.id) ?? null
+    if (found) bpRefCache.set(key, found)
+    return found
 }
+
+// Purge les entrées du cache à la déconnexion pour éviter l'accumulation d'entrées
+// mortes (l'objet player est déjà parti, mais ev.playerId suffit comme clé)
+eventBus.after("playerLeave", (ev) => {
+    bpRefCache.delete(ev.playerId + ":cheat_backpack")
+    bpRefCache.delete(ev.playerId + ":hover_backpack")
+})
 
 // Ajoute un item dans les slots usables du backpack (0 à tierSlots-1), retourne true si ajouté
 function addItemToBpSlots(container, itemStack, tierSlots) {
@@ -234,8 +263,8 @@ function loadBackpack(entityTypeID, player, backpackId, tierSlots) {
 
 // ── Backpack spawn (every 5 ticks) ──────────────────────────────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             const equip = player.getComponent("equippable")
             const mainhand = equip?.getEquipment(EquipmentSlot.Mainhand)
@@ -272,8 +301,8 @@ eventBus.interval(() => {
 
 // ── Backpack follow + close detection (every tick) ──────────────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             if (player.hasTag("backpack_active")) {
                 const headLoc = player.getHeadLocation()
@@ -348,8 +377,8 @@ eventBus.interval(() => {
 // ── Barrel cleanup (every 100 ticks) ─────────────────────────────────────────
 // Nettoie les barrels orphelins dans la zone de travail du joueur
 
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             const dim = player.dimension
             const cfg = dimCfg(dim)
@@ -390,8 +419,8 @@ eventBus.interval(() => {
 // ── Backpack Hover — spawn/vacuum/despawn (every 10 ticks) ───────────────────
 // Spawn quand l'inventaire est plein, despawn quand il y a de la place.
 
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             if (!isUnlocked("backpackHover", player) || !gdp("backpackHover", player)) continue
             if (player.hasTag("backpack_active")) continue
@@ -472,8 +501,8 @@ eventBus.after("entityDie", (ev) => {
 
 // ── Backpack Hover — sauvegarde périodique (every 200 ticks) ─────────────────
 
-eventBus.interval(() => {
-    for (const player of world.getAllPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         try {
             if (!isUnlocked("backpackHover", player) || !gdp("backpackHover", player)) continue
             if (player.hasTag("backpack_active")) continue

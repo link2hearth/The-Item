@@ -1,4 +1,4 @@
-import { world, system, EquipmentSlot, Player } from "@minecraft/server";
+import { world, EquipmentSlot, Player } from "@minecraft/server";
 import { MessageFormData, ActionFormData } from "@minecraft/server-ui"
 import { gdp, sdp } from "../core/utils.js"
 import { isUnlocked, UNLOCK_MAP } from "../core/data.js"
@@ -290,8 +290,8 @@ world.afterEvents.playerDimensionChange.subscribe((ev) => {
 
 const lastArmor = new Map();
 
-system.runInterval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
 
         const equip = player.getComponent("minecraft:equippable");
         if (!equip) continue;
@@ -318,8 +318,8 @@ system.runInterval(() => {
     }
 }, 10);
 // Playtime (checked every 100 ticks alongside the stat update)
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const ticks = gdp("playTimeTicks", player) ?? 0;
         if (ticks >= 72000)  grant(player, "playtime_1h");
         if (ticks >= 720000) grant(player, "playtime_10h");
@@ -328,11 +328,11 @@ eventBus.interval(() => {
 
 // ── Kill / death achievements (called from player.js after stat update) ──────
 
-export function onMobKilledByPlayer(player, totalKills, entityTypeId) {
-    if (totalKills >= 1)    grant(player, "monster_hunter");
-    if (totalKills >= 100)  grant(player, "overkill");
-    if (totalKills >= 500)  grant(player, "kills_500");
-    if (totalKills >= 1000) grant(player, "exterminator");
+export function onMobKilledByPlayer(player, monsterKills, entityTypeId) {
+    if (monsterKills >= 1)    grant(player, "monster_hunter");
+    if (monsterKills >= 100)  grant(player, "overkill");
+    if (monsterKills >= 500)  grant(player, "kills_500");
+    if (monsterKills >= 1000) grant(player, "exterminator");
 
     switch (entityTypeId) {
         case "minecraft:creeper":          grant(player, "kill_creeper");     break;
@@ -433,8 +433,8 @@ eventBus.after("entityDie", (ev) => {
 }, 10);
 
 // Y-position : bedrock et limite du ciel (toutes les 20 ticks)
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const y = player.location.y;
         if (y <= -63) grant(player, "bedrock_reach");
         if (y >= 320)  grant(player, "sky_limit");
@@ -442,8 +442,8 @@ eventBus.interval(() => {
 }, 20);
 
 // Élytre dans l'inventaire ou slot poitrine (toutes les 100 ticks)
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (hasAchievement(player, "elytra_found")) continue;
         const equip = player.getComponent("minecraft:equippable");
         if (!equip) continue;
@@ -463,8 +463,8 @@ eventBus.interval(() => {
 }, 100);
 
 // Insomniaque : 10h de jeu sans dormir (toutes les 100 ticks)
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         if (player.isSleeping) {
             sdp("stat_ticksWithoutSleep", player, 0);
             continue;
@@ -504,8 +504,8 @@ const CRAFT_EQUIP_SLOTS = [
     EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand
 ];
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const pending = CRAFT_CHECKS.filter(c => !hasAchievement(player, c.id));
         if (pending.length === 0) continue;
 
@@ -535,8 +535,8 @@ eventBus.interval(() => {
 // ── Effets de statut & survie ────────────────────────────────────────────────
 
 // Héros du village, Bad Omen, Conduit, Dauphins (toutes les 100 ticks)
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const effectIds = player.getEffects().map(e => e.typeId);
         if (effectIds.includes("minecraft:hero_of_the_village")) grant(player, "hero_of_village");
         if (effectIds.includes("minecraft:bad_omen"))             grant(player, "bad_omen");
@@ -555,8 +555,8 @@ world.afterEvents.itemUse.subscribe((ev) => {
 // Survivre à l'effet Wither (toutes les 20 ticks)
 const hadWitherMap = new Map();
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const hasWither = player.getEffects().some(e => e.typeId === "minecraft:wither");
         if (hasWither) {
             hadWitherMap.set(player.id, true);
@@ -570,8 +570,8 @@ eventBus.interval(() => {
 // Totem de l'immortalité : HP <= 1 puis récupération avec Regen II + Absorption (toutes les 5 ticks)
 const nearDeathMap = new Map();
 
-eventBus.interval(() => {
-    for (const player of world.getPlayers()) {
+eventBus.playerInterval((players) => {
+    for (const player of players) {
         const hp = player.getComponent("minecraft:health")?.currentValue ?? 20;
         if (hp <= 1) {
             nearDeathMap.set(player.id, true);

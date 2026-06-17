@@ -196,9 +196,9 @@ function cleanGroundItems(dimension, loc, snapshot) {
 
 const ARROWS = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖']
 
-system.runInterval(() => {
+eventBus.playerInterval((players) => {
     if (corpseMap.size === 0) return
-    for (const player of world.getAllPlayers()) {
+    for (const player of players) {
         const stack = corpseMap.get(player.id)
         if (!stack) continue
 
